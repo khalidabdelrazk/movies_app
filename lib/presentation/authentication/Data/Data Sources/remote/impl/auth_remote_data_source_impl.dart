@@ -30,6 +30,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         await Connectivity().checkConnectivity();
     try {
       if (connectivityResult.contains(ConnectivityResult.wifi) ||
+          connectivityResult.contains(ConnectivityResult.ethernet) ||
+          connectivityResult.contains(ConnectivityResult.vpn) ||
+          connectivityResult.contains(ConnectivityResult.bluetooth) ||
+          connectivityResult.contains(ConnectivityResult.other) ||
+          !connectivityResult.contains(ConnectivityResult.none) ||
           connectivityResult.contains(ConnectivityResult.mobile)) {
         var response = await apiManager.postData(
           path: ApiEndpoints.register,
@@ -65,13 +70,18 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<Either<Failures, LoginResponseEntity>> login(String? email, String? password) async {
-    print(
-        'email: $email,password: $password,');
+  Future<Either<Failures, LoginResponseEntity>> login(
+      String? email, String? password) async {
+    print('email: $email,password: $password,');
     final List<ConnectivityResult> connectivityResult =
         await Connectivity().checkConnectivity();
     try {
       if (connectivityResult.contains(ConnectivityResult.wifi) ||
+          connectivityResult.contains(ConnectivityResult.ethernet) ||
+          connectivityResult.contains(ConnectivityResult.vpn) ||
+          connectivityResult.contains(ConnectivityResult.bluetooth) ||
+          connectivityResult.contains(ConnectivityResult.other) ||
+          !connectivityResult.contains(ConnectivityResult.none) ||
           connectivityResult.contains(ConnectivityResult.mobile)) {
         var response = await apiManager.postData(
           path: ApiEndpoints.login,
@@ -92,7 +102,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         if (response.statusCode! >= 200 && response.statusCode! < 300) {
           return Right(loginResponseDm);
         }
-        return Left(ServerError(errorMessage: _extractMessage(loginResponseDm.message)));
+        return Left(ServerError(
+            errorMessage: _extractMessage(loginResponseDm.message)));
       } else {
         return Left(NetworkError(errorMessage: "Network Error"));
       }
@@ -111,5 +122,4 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return "Unexpected error occurred";
     }
   }
-
 }
