@@ -29,9 +29,12 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
           connectivityResult.contains(ConnectivityResult.mobile)) {
         var response = await apiManager.getData(
           path: ApiEndpoints.movieDetails,
-          queryParameters: {},
+          queryParameters: {
+            "imdb_id" : imdbId,
+            "with_cast" : true,
+            "with_images" : true
+          },
           options: Options(
-            headers: {"Content-Type": "application/json"},
             validateStatus: (status) => true,
           ),
         );
@@ -49,6 +52,7 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
         return Left(NetworkError(errorMessage: "Network Error"));
       }
     } catch (e) {
+      rethrow;
       print('Hello');
       return Left(ServerError(errorMessage: e.toString()));
     }

@@ -33,6 +33,18 @@ import '../../presentation/home/Data/Repository/home_repository_impl.dart'
 import '../../presentation/home/Domain/Repository/home_repository.dart' as _i33;
 import '../../presentation/home/Domain/Use%20Case/home_use_case.dart' as _i1003;
 import '../../presentation/home/ui/cubit/home_view_model.dart' as _i46;
+import '../../presentation/movie%20details/Data/Data%20Sources/remote/impl/movie_details_remote_data_source_impl.dart'
+    as _i859;
+import '../../presentation/movie%20details/Data/Data%20Sources/remote/movie_details_remote_data_source.dart'
+    as _i649;
+import '../../presentation/movie%20details/Data/Repository/movie_details_repository_impl.dart'
+    as _i376;
+import '../../presentation/movie%20details/Domain/Repository/movie_details_repository.dart'
+    as _i240;
+import '../../presentation/movie%20details/Domain/Use%20Case/movie_details_use_case.dart'
+    as _i843;
+import '../../presentation/movie%20details/ui/cubit/movie_details_view_model.dart'
+    as _i755;
 import '../api%20manager/api_manager.dart' as _i949;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -49,16 +61,27 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i949.ApiManager>(() => _i949.ApiManager());
     gh.factory<_i252.HomeRemoteDataSource>(() =>
         _i769.HomeRemoteDataSourceImpl(apiManager: gh<_i949.ApiManager>()));
+    gh.factory<_i649.MovieDetailsRemoteDataSource>(() =>
+        _i859.MovieDetailsRemoteDataSourceImpl(
+            apiManager: gh<_i949.ApiManager>()));
     gh.factory<_i293.AuthRemoteDataSource>(() =>
         _i1054.AuthRemoteDataSourceImpl(apiManager: gh<_i949.ApiManager>()));
     gh.factory<_i33.HomeRepository>(() => _i971.HomeRepositoryImpl(
         homeRemoteDataSource: gh<_i252.HomeRemoteDataSource>()));
     gh.factory<_i471.AuthRepository>(() => _i659.AuthRepositoryImpl(
         authRemoteDataSource: gh<_i293.AuthRemoteDataSource>()));
+    gh.factory<_i240.MovieDetailsRepository>(() =>
+        _i376.MovieDetailsRepositoryImpl(
+            movieDetailsRemoteDataSource:
+                gh<_i649.MovieDetailsRemoteDataSource>()));
     gh.factory<_i1003.HomeUseCase>(
         () => _i1003.HomeUseCase(homeRepository: gh<_i33.HomeRepository>()));
     gh.factory<_i105.AuthUseCase>(
         () => _i105.AuthUseCase(authRepository: gh<_i471.AuthRepository>()));
+    gh.factory<_i843.MovieDetailsUseCase>(() => _i843.MovieDetailsUseCase(
+        movieDetailsRepository: gh<_i240.MovieDetailsRepository>()));
+    gh.factory<_i755.MovieDetailsViewModel>(() => _i755.MovieDetailsViewModel(
+        movieDetailsUseCase: gh<_i843.MovieDetailsUseCase>()));
     gh.factory<_i46.HomeViewModel>(
         () => _i46.HomeViewModel(homeUseCase: gh<_i1003.HomeUseCase>()));
     gh.factory<_i212.AuthViewModel>(

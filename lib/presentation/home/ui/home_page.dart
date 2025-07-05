@@ -17,38 +17,48 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        height: double.infinity,
         width: double.infinity,
         decoration: BoxDecoration(
-          image: DecorationImage(image: AssetImage(AppAssets.onBoarding6)),
+          image: DecorationImage(
+            image: AssetImage(AppAssets.onBoarding6),
+            fit: BoxFit.cover,
+          ),
         ),
-        child: ListView(
-          children: [
-            SizedBox(
-              width: 267.w,
-              height: 93.h,
-              child: Image.asset(AppAssets.available),
-            ),
-            SizedBox(
-              height: 360,
-              width: double.infinity,
-              child: MostPopularSlider(),
-            ),
-            SizedBox(
-              width: 267.w,
-              height: 93.h,
-              child: Image.asset(AppAssets.watchNow),
-            ),
-            Column(
-              children: List.generate(
-                genre.length,
-                    (index) => Padding(
-                  padding: EdgeInsets.only(top: 8.h,left: 16.w),
-                  child: CategoryMovieSlider(genre: genre[index],),
-                ),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: SizedBox(
+                width: 267.w,
+                height: 93.h,
+                child: Image.asset(AppAssets.available),
               ),
             ),
-            SizedBox(height: 70.h,),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 360.h,
+                child: const MostPopularSlider(),
+              ),
+            ),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                width: 267.w,
+                height: 93.h,
+                child: Image.asset(AppAssets.watchNow),
+              ),
+            ),
+            SliverList(
+              delegate: SliverChildBuilderDelegate(
+                    (context, index) => Padding(
+                  padding: EdgeInsets.only(top: 8.h, left: 16.w),
+                  child: CategoryMovieSlider(
+                    key: ValueKey(genre[index]), // ✅ Unique key
+                    genre: genre[index],
+                  ),
+                ),
+                childCount: genre.length,
+              ),
+            ),
+            SliverToBoxAdapter(child: SizedBox(height: 70.h)),
           ],
         ),
       ),
