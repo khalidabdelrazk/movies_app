@@ -5,7 +5,8 @@ import 'package:movies/presentation/movie%20details/Domain/Entity/movie_details_
 class ScreenshotsSection extends StatelessWidget {
   final MovieDetailsResponseEntity movieDetailsResponseEntity;
 
-  const ScreenshotsSection({super.key, required this.movieDetailsResponseEntity});
+  const ScreenshotsSection(
+      {super.key, required this.movieDetailsResponseEntity});
 
   @override
   Widget build(BuildContext context) {
@@ -15,10 +16,33 @@ class ScreenshotsSection extends StatelessWidget {
       movieDetailsResponseEntity.data?.movie?.mediumScreenshotImage3,
     ];
 
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: List.generate(
+        3,
+        (index) {
+          final imageUrl = screenshots[index] ?? '';
+          return Padding(
+            padding: EdgeInsets.only(bottom:  8.h),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12.r),
+              child: Image.network(
+                imageUrl,
+                height: 167.h,
+                width: double.infinity,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) =>
+                    Container(color: Colors.grey, width: 280.w, height: 180.h),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+
     return SizedBox(
-      height: 180.h,
       child: ListView.separated(
-        scrollDirection: Axis.horizontal,
+        scrollDirection: Axis.vertical,
         padding: EdgeInsets.symmetric(horizontal: 16.w),
         itemCount: screenshots.length,
         separatorBuilder: (context, index) => SizedBox(width: 12.w),

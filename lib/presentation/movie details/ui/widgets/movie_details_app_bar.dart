@@ -11,8 +11,6 @@ class MovieDetailsAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      pinned: true,
-      stretch: true,
       expandedHeight: 500.h,
       backgroundColor: AppColors.scaffoldBgColor,
       flexibleSpace: FlexibleSpaceBar(
@@ -21,10 +19,8 @@ class MovieDetailsAppBar extends StatelessWidget {
           children: [
             Image.network(
               movie.data?.movie?.largeCoverImage ?? '',
-              width: double.infinity,
-              height: 500.h,
               fit: BoxFit.cover,
-              errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+              height: 500.h,
             ),
             Container(
               decoration: const BoxDecoration(
@@ -39,65 +35,22 @@ class MovieDetailsAppBar extends StatelessWidget {
                 ),
               ),
             ),
-            // Center Play Button
-            Center(
-              child: CircleAvatar(
-                radius: 36.r,
-                backgroundColor: AppColors.primaryYellowColor,
-                child: Icon(
-                  Icons.play_arrow,
-                  color: AppColors.scaffoldBgColor,
-                  size: 40.r,
-                ),
-              ),
-            ),
-            // Title & Year at the bottom
-            Positioned(
-              bottom: 32.h,
-              left: 0,
-              right: 0,
-              child: Column(
-                children: [
-                  Text(
-                    movie.data?.movie?.titleEnglish ?? 'Unknown Title',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.light,
-                      fontSize: 22.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    movie.data?.movie?.year?.toString() ?? 'Unknown Year',
-                    style: TextStyle(
-                      color: AppColors.gray,
-                      fontSize: 14.sp,
-                    ),
-                  ),
-                ],
-              ),
-            ),
           ],
         ),
       ),
-      leading: Padding(
-        padding: EdgeInsets.only(left: 8.w),
-        child: IconButton(
-          icon: Icon(Icons.arrow_back_ios, color: AppColors.light, size: 24.r),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back_ios, color: AppColors.light, size: 24.r),
+        onPressed: () {
+          Navigator.of(context).pop();
+        },
       ),
       actions: [
-        Padding(
-          padding: EdgeInsets.only(right: 8.w),
-          child: IconButton(
-            icon: Icon(Icons.bookmark_outline,
-                color: AppColors.light, size: 24.r),
-            onPressed: () {
-              // Handle bookmark action
-            },
-          ),
+        IconButton(
+          icon: Icon(Icons.bookmark_outline,
+              color: AppColors.light, size: 24.r),
+          onPressed: () {
+            // Handle bookmark
+          },
         ),
       ],
     );

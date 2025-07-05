@@ -39,24 +39,45 @@ class MovieActions extends StatelessWidget {
           ),
           SizedBox(height: 20.h),
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              RatingItem(
-                imagePath: AppAssets.love,
-                value: '15',
-                color: AppColors.primaryYellowColor,
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 30,vertical: 20),
+                decoration: BoxDecoration(
+                  color: AppColors.scaffoldBgColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: RatingItem(
+                  imagePath: AppAssets.love,
+                  value: movieDetailsResponseEntity.data?.movie?.likeCount.toString() ?? ' 90',
+                  color: AppColors.primaryYellowColor,
+                ),
               ),
-              RatingItem(
-                imagePath: AppAssets.timer,
-                value: '90',
-                color: AppColors.primaryYellowColor,
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 30,vertical: 20),
+                decoration: BoxDecoration(
+                  color: AppColors.scaffoldBgColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: RatingItem(
+                  imagePath: AppAssets.timer,
+                  value: movieDetailsResponseEntity.data?.movie?.runtime.toString() ?? ' 90',
+                  color: AppColors.primaryYellowColor,
+                ),
               ),
-              RatingItem(
-                imagePath: AppAssets.star,
-                value: movieDetailsResponseEntity.data?.movie?.rating
-                    ?.toString() ??
-                    "0.0",
-                color: AppColors.primaryYellowColor,
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 30,vertical: 20),
+                decoration: BoxDecoration(
+                  color: AppColors.scaffoldBgColor,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: RatingItem(
+                  imagePath: AppAssets.star,
+                  value: movieDetailsResponseEntity.data?.movie?.rating
+                      ?.toString() ??
+                      "0.0",
+                  color: AppColors.primaryYellowColor,
+                ),
               ),
             ],
           ),
