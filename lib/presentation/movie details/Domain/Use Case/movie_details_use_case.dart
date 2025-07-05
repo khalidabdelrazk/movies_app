@@ -5,10 +5,12 @@ import '../Entity/movie_details_response_entity.dart';
 import '../Repository/movie_details_repository.dart';
 
 @injectable
-class HomeUseCase {
+class MovieDetailsUseCase {
   final MovieDetailsRepository movieDetailsRepository;
-  HomeUseCase({required this.movieDetailsRepository});
-  Future<Either<Failures, MovieDetailsResponseEntity>> invoke(String imdbId,) {
+  MovieDetailsUseCase({required this.movieDetailsRepository});
+  Future<Either<Failures, MovieDetailsResponseEntity>> invoke(
+    String imdbId,
+  ) {
     return movieDetailsRepository.getMovieDetails(imdbId);
   }
 }
