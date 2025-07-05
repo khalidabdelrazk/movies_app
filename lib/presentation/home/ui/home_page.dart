@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies/core/assets/app_assets.dart';
+import 'package:movies/presentation/home/ui/widgets/most_popular_slider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,10 +21,7 @@ class HomePage extends StatelessWidget {
           image: DecorationImage(image: AssetImage(AppAssets.onBoarding6)),
         ),
         child: SafeArea(
-          left: false,
-          right: false,
-          bottom: false,
-          child: Column(
+          child: ListView(
             children: [
               SizedBox(
                 width: 267.w,
@@ -28,7 +31,13 @@ class HomePage extends StatelessWidget {
               SizedBox(
                 height: 360,
                 width: double.infinity,
-              )
+                child: MostPopularSlider(),
+              ),
+              SizedBox(
+                width: 267.w,
+                height: 93.h,
+                child: Image.asset(AppAssets.watchNow),
+              ),
             ],
           ),
         ),

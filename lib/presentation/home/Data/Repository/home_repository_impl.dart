@@ -12,8 +12,7 @@ class HomeRepositoryImpl extends HomeRepository {
 
   @override
   Future<Either<Failures, MoviesResponseEntity>> getMostPopular() {
-    // TODO: implement getMostPopular
-    throw UnimplementedError();
+    return homeRemoteDataSource.getMostPopular();
   }
 
 

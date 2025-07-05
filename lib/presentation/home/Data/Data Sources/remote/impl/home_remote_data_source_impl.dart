@@ -29,7 +29,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           !connectivityResult.contains(ConnectivityResult.none) ||
           connectivityResult.contains(ConnectivityResult.mobile)) {
         var response = await apiManager.getData(
-          path: ApiEndpoints.movieSuggestions,
+          path: ApiEndpoints.listMovies,
           options: Options(
             headers: {"Content-Type": "application/json"},
             validateStatus: (status) => true,
@@ -38,8 +38,6 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         MoviesResponseDm registerResponse = MoviesResponseDm.fromJson(
           response.data,
         );
-        print("RESPONSE BODY: ${response.data}");
-        print("STATUS CODE: ${response.statusCode}");
         if (response.statusCode! >= 200 && response.statusCode! < 300) {
           return Right(registerResponse);
         }
@@ -48,7 +46,6 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
         return Left(NetworkError(errorMessage: "Network Error"));
       }
     } catch (e) {
-      print('Hello');
       return Left(ServerError(errorMessage: e.toString()));
     }
   }
