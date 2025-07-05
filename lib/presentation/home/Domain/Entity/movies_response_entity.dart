@@ -1,22 +1,20 @@
-class MoviesResponse {
-  MoviesResponse({
-    this.status,
-    this.statusMessage,
-    this.data,
-    this.meta,});
+class MoviesResponseEntity {
+  MoviesResponseEntity({
+      this.status, 
+      this.statusMessage, 
+      this.data, 
+      this.meta,});
 
-  MoviesResponse.fromJson(dynamic json) {
+  MoviesResponseEntity.fromJson(dynamic json) {
     status = json['status'];
     statusMessage = json['status_message'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
-    // Renamed @meta to Meta
-    meta = json['@meta'] != null ? Meta.fromJson(json['@meta']) : null;
+    data = json['data'] != null ? DataEntity.fromJson(json['data']) : null;
+    meta = json['MetaEntity'] != null ? MetaEntity.fromJson(json['MetaEntity']) : null;
   }
   String? status;
   String? statusMessage;
-  Data? data;
-  // Renamed @meta to Meta
-  Meta? meta;
+  DataEntity? data;
+  MetaEntity? meta;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -26,31 +24,29 @@ class MoviesResponse {
       map['data'] = data?.toJson();
     }
     if (meta != null) {
-      // The JSON key can still be '@meta'
-      map['@meta'] = meta?.toJson();
+      map['MetaEntity'] = meta?.toJson();
     }
     return map;
   }
+
 }
 
-// Renamed class @meta to Meta
-class Meta {
-  Meta({
-    this.serverTime,
-    this.serverTimezone,
-    this.apiVersion,
-    this.executionTime,});
+class MetaEntity {
+  MetaEntity({
+      this.serverTime, 
+      this.serverTimezone, 
+      this.apiVersion, 
+      this.executionTime,});
 
-  // Renamed @meta.fromJson to Meta.fromJson
-  Meta.fromJson(dynamic json) {
+  MetaEntity.fromJson(dynamic json) {
     serverTime = json['server_time'];
     serverTimezone = json['server_timezone'];
     apiVersion = json['api_version'];
     executionTime = json['execution_time'];
   }
-  int? serverTime;
+  num? serverTime;
   String? serverTimezone;
-  int? apiVersion;
+  num? apiVersion;
   String? executionTime;
 
   Map<String, dynamic> toJson() {
@@ -61,30 +57,31 @@ class Meta {
     map['execution_time'] = executionTime;
     return map;
   }
+
 }
 
-class Data {
-  Data({
-    this.movieCount,
-    this.limit,
-    this.pageNumber,
-    this.movies,});
+class DataEntity {
+  DataEntity({
+      this.movieCount, 
+      this.limit, 
+      this.pageNumber, 
+      this.movies,});
 
-  Data.fromJson(dynamic json) {
+  DataEntity.fromJson(dynamic json) {
     movieCount = json['movie_count'];
     limit = json['limit'];
     pageNumber = json['page_number'];
     if (json['movies'] != null) {
       movies = [];
       json['movies'].forEach((v) {
-        movies?.add(Movies.fromJson(v));
+        movies?.add(MoviesEntity.fromJson(v));
       });
     }
   }
-  int? movieCount;
-  int? limit;
-  int? pageNumber;
-  List<Movies>? movies;
+  num? movieCount;
+  num? limit;
+  num? pageNumber;
+  List<MoviesEntity>? movies;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -96,38 +93,39 @@ class Data {
     }
     return map;
   }
+
 }
 
-class Movies {
-  Movies({
-    this.id,
-    this.url,
-    this.imdbCode,
-    this.title,
-    this.titleEnglish,
-    this.titleLong,
-    this.slug,
-    this.year,
-    this.rating,
-    this.runtime,
-    this.genres,
-    this.summary,
-    this.descriptionFull,
-    this.synopsis,
-    this.ytTrailerCode,
-    this.language,
-    this.mpaRating,
-    this.backgroundImage,
-    this.backgroundImageOriginal,
-    this.smallCoverImage,
-    this.mediumCoverImage,
-    this.largeCoverImage,
-    this.state,
-    this.torrents,
-    this.dateUploaded,
-    this.dateUploadedUnix,});
+class MoviesEntity {
+  MoviesEntity({
+      this.id, 
+      this.url, 
+      this.imdbCode, 
+      this.title, 
+      this.titleEnglish, 
+      this.titleLong, 
+      this.slug, 
+      this.year, 
+      this.rating, 
+      this.runtime, 
+      this.genres, 
+      this.summary, 
+      this.descriptionFull, 
+      this.synopsis, 
+      this.ytTrailerCode, 
+      this.language, 
+      this.mpaRating, 
+      this.backgroundImage, 
+      this.backgroundImageOriginal, 
+      this.smallCoverImage, 
+      this.mediumCoverImage, 
+      this.largeCoverImage, 
+      this.state, 
+      this.torrents, 
+      this.dateUploaded, 
+      this.dateUploadedUnix,});
 
-  Movies.fromJson(dynamic json) {
+  MoviesEntity.fromJson(dynamic json) {
     id = json['id'];
     url = json['url'];
     imdbCode = json['imdb_code'];
@@ -136,7 +134,7 @@ class Movies {
     titleLong = json['title_long'];
     slug = json['slug'];
     year = json['year'];
-    rating = json['rating']?.toDouble(); // Added .toDouble() for safety
+    rating = json['rating'];
     runtime = json['runtime'];
     genres = json['genres'] != null ? json['genres'].cast<String>() : [];
     summary = json['summary'];
@@ -154,22 +152,22 @@ class Movies {
     if (json['torrents'] != null) {
       torrents = [];
       json['torrents'].forEach((v) {
-        torrents?.add(Torrents.fromJson(v));
+        torrents?.add(TorrentsEntity.fromJson(v));
       });
     }
     dateUploaded = json['date_uploaded'];
     dateUploadedUnix = json['date_uploaded_unix'];
   }
-  int? id;
+  num? id;
   String? url;
   String? imdbCode;
   String? title;
   String? titleEnglish;
   String? titleLong;
   String? slug;
-  int? year;
-  double? rating;
-  int? runtime;
+  num? year;
+  num? rating;
+  num? runtime;
   List<String>? genres;
   String? summary;
   String? descriptionFull;
@@ -183,9 +181,9 @@ class Movies {
   String? mediumCoverImage;
   String? largeCoverImage;
   String? state;
-  List<Torrents>? torrents;
+  List<TorrentsEntity>? torrents;
   String? dateUploaded;
-  int? dateUploadedUnix;
+  num? dateUploadedUnix;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -219,26 +217,27 @@ class Movies {
     map['date_uploaded_unix'] = dateUploadedUnix;
     return map;
   }
+
 }
 
-class Torrents {
-  Torrents({
-    this.url,
-    this.hash,
-    this.quality,
-    this.type,
-    this.isRepack,
-    this.videoCodec,
-    this.bitDepth,
-    this.audioChannels,
-    this.seeds,
-    this.peers,
-    this.size,
-    this.sizeBytes,
-    this.dateUploaded,
-    this.dateUploadedUnix,});
+class TorrentsEntity {
+  TorrentsEntity({
+      this.url, 
+      this.hash, 
+      this.quality, 
+      this.type, 
+      this.isRepack, 
+      this.videoCodec, 
+      this.bitDepth, 
+      this.audioChannels, 
+      this.seeds, 
+      this.peers, 
+      this.size, 
+      this.sizeBytes, 
+      this.dateUploaded, 
+      this.dateUploadedUnix,});
 
-  Torrents.fromJson(dynamic json) {
+  TorrentsEntity.fromJson(dynamic json) {
     url = json['url'];
     hash = json['hash'];
     quality = json['quality'];
@@ -262,12 +261,12 @@ class Torrents {
   String? videoCodec;
   String? bitDepth;
   String? audioChannels;
-  int? seeds;
-  int? peers;
+  num? seeds;
+  num? peers;
   String? size;
-  int? sizeBytes;
+  num? sizeBytes;
   String? dateUploaded;
-  int? dateUploadedUnix;
+  num? dateUploadedUnix;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -287,4 +286,5 @@ class Torrents {
     map['date_uploaded_unix'] = dateUploadedUnix;
     return map;
   }
+
 }

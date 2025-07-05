@@ -3,12 +3,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:movies/core/assets/app_assets.dart';
 import 'package:movies/core/theme/app_colors.dart';
-
-import '../model/movies_response.dart';
+import 'package:movies/presentation/home/Domain/Entity/movies_response_entity.dart';
 import 'custom_image.dart';
 
 class MoviePosterCard extends StatelessWidget {
-  final Movies movie;
+  final MoviesEntity movie;
   final double? width, height;
   final VoidCallback? onPressed;
 

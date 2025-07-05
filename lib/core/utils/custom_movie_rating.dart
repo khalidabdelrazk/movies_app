@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:movies/core/assets/app_assets.dart';
-import 'package:movies/core/model/movies_response.dart';
 import 'package:movies/core/theme/app_colors.dart';
+import 'package:movies/presentation/home/Domain/Entity/movies_response_entity.dart';
 
 class CustomMovieRating extends StatelessWidget {
-  CustomMovieRating({
+  const CustomMovieRating({
     super.key,
     required this.movie,
     required this.image,
   });
-  final Movies movie;
-  String image;
+  final MoviesEntity movie;
+  final String image;
   @override
   Widget build(BuildContext context) {
     return Container(

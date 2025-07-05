@@ -2,20 +2,59 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
-import 'package:movies/core/api%20manager/api_endpoints.dart';
-import 'package:movies/presentation/authentication/Data/Models/login_response_dm.dart';
-import 'package:movies/presentation/authentication/Domain/Entity/login_response_entity.dart';
+import 'package:movies/core/model/failures.dart';
+import 'package:movies/presentation/home/Domain/Entity/movies_response_entity.dart';
+import '../../../../../../core/api manager/api_endpoints.dart';
 import '../../../../../../core/api manager/api_manager.dart';
-import '../../../../../../core/model/failures.dart';
-import '../../../../Domain/Entity/register_response_entity.dart';
-import '../../../Models/register_response_dm.dart';
-import '../auth_remote_data_source.dart';
+import '../../../Models/movies_response_dm.dart';
+import '../home_remote_data_source.dart';
 
-@Injectable(as: AuthRemoteDataSource)
-class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
+@Injectable(as: HomeRemoteDataSource)
+class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   ApiManager apiManager;
-  AuthRemoteDataSourceImpl({required this.apiManager});
+  HomeRemoteDataSourceImpl({required this.apiManager});
 
+
+
+  @override
+  Future<Either<Failures, MoviesResponseEntity>> getMostPopular() async{
+    final List<ConnectivityResult> connectivityResult =
+        await Connectivity().checkConnectivity();
+    try {
+      if (connectivityResult.contains(ConnectivityResult.wifi) ||
+          connectivityResult.contains(ConnectivityResult.ethernet) ||
+          connectivityResult.contains(ConnectivityResult.vpn) ||
+          connectivityResult.contains(ConnectivityResult.bluetooth) ||
+          connectivityResult.contains(ConnectivityResult.other) ||
+          !connectivityResult.contains(ConnectivityResult.none) ||
+          connectivityResult.contains(ConnectivityResult.mobile)) {
+        var response = await apiManager.getData(
+          path: ApiEndpoints.movieSuggestions,
+          options: Options(
+            headers: {"Content-Type": "application/json"},
+            validateStatus: (status) => true,
+          ),
+        );
+        MoviesResponseDm registerResponse = MoviesResponseDm.fromJson(
+          response.data,
+        );
+        print("RESPONSE BODY: ${response.data}");
+        print("STATUS CODE: ${response.statusCode}");
+        if (response.statusCode! >= 200 && response.statusCode! < 300) {
+          return Right(registerResponse);
+        }
+        return Left(ServerError(errorMessage: registerResponse.message!));
+      } else {
+        return Left(NetworkError(errorMessage: "Network Error"));
+      }
+    } catch (e) {
+      print('Hello');
+      return Left(ServerError(errorMessage: e.toString()));
+    }
+  }
+}
+
+/*
   @override
   Future<Either<Failures, RegisterResponseEntity>> register(
       String? name,
@@ -122,4 +161,4 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return "Unexpected error occurred";
     }
   }
-}
+ */

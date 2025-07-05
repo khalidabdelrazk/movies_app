@@ -1,7 +1,7 @@
 import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
 import 'package:movies/presentation/authentication/Domain/Entity/login_response_entity.dart';
-import '../../Domain/Entity/failures.dart';
+import '../../../../core/model/failures.dart';
 import '../../Domain/Entity/register_response_entity.dart';
 import '../../Domain/Repository/auth_repository.dart';
 import '../Data Sources/remote/auth_remote_data_source.dart';
