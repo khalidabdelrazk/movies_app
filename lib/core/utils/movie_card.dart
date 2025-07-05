@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:movies/core/assets/app_assets.dart';
+import 'package:movies/core/routes/route_names.dart';
 import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/presentation/home/Domain/Entity/movies_response_entity.dart';
 import 'custom_image.dart';
@@ -22,7 +23,10 @@ class MoviePosterCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: onPressed,
+      onTap: () {
+          Navigator.of(context)
+              .pushNamed(RouteNames.movieDetails, arguments: movie.imdbCode);
+      },
       child: Container(
         width: width ?? 198.sp,
         height: height ?? 279.sp,
