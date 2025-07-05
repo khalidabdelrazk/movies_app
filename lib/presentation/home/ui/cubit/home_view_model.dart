@@ -10,10 +10,10 @@ class HomeViewModel extends HydratedCubit<HomeStates> {
 
   HomeViewModel({required this.homeUseCase}) : super(MostPopularLoadingState());
 
-  void getMostPopularMovies() async {
+  void getMostPopularMovies({String? genre}) async {
     emit(MostPopularLoadingState());
 
-    final result = await homeUseCase.invoke();
+    final result = await homeUseCase.invoke(genre);
 
     result.fold(
           (failure) => emit(MostPopularErrorState(message: failure.errorMessage)),

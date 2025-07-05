@@ -11,8 +11,8 @@ class HomeRepositoryImpl extends HomeRepository {
   HomeRepositoryImpl({required this.homeRemoteDataSource});
 
   @override
-  Future<Either<Failures, MoviesResponseEntity>> getMostPopular() {
-    return homeRemoteDataSource.getMostPopular();
+  Future<Either<Failures, MoviesResponseEntity>> getMostPopular(String? genre) {
+    return homeRemoteDataSource.getMostPopular(genre);
   }
 
 

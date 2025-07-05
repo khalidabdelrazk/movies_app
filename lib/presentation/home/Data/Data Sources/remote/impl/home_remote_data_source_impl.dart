@@ -17,7 +17,7 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
 
 
   @override
-  Future<Either<Failures, MoviesResponseEntity>> getMostPopular() async{
+  Future<Either<Failures, MoviesResponseEntity>> getMostPopular(String? genre) async{
     final List<ConnectivityResult> connectivityResult =
         await Connectivity().checkConnectivity();
     try {
@@ -28,8 +28,17 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           connectivityResult.contains(ConnectivityResult.other) ||
           !connectivityResult.contains(ConnectivityResult.none) ||
           connectivityResult.contains(ConnectivityResult.mobile)) {
+        Map<String, dynamic> queryParams = {};
+        if(genre != null){
+          queryParams.addAll(
+            {
+              "genre" : genre
+            }
+          );
+        }
         var response = await apiManager.getData(
           path: ApiEndpoints.listMovies,
+          queryParameters: queryParams,
           options: Options(
             headers: {"Content-Type": "application/json"},
             validateStatus: (status) => true,

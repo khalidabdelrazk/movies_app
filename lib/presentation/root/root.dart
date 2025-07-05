@@ -58,7 +58,7 @@ class RootState extends State<Root> with TickerProviderStateMixin {
       backgroundColor: AppColors.scaffoldBgColor,
       body: getBarPage(),
       floatingActionButton: getBottomBar(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 

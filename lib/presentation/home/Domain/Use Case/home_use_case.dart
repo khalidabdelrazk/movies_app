@@ -8,7 +8,7 @@ import '../Repository/home_repository.dart';
 class HomeUseCase {
   final HomeRepository homeRepository;
   HomeUseCase({required this.homeRepository});
-  Future<Either<Failures, MoviesResponseEntity>> invoke() {
-    return homeRepository.getMostPopular();
+  Future<Either<Failures, MoviesResponseEntity>> invoke(String? genre) {
+    return homeRepository.getMostPopular(genre);
   }
 }
