@@ -47,6 +47,17 @@ import '../../presentation/movie%20details/Domain/Use%20Case/movie_suggestion_us
     as _i235;
 import '../../presentation/movie%20details/ui/cubit/movie_details_view_model.dart'
     as _i755;
+import '../../presentation/search/Data/Data%20Sources/remote/impl/search_remote_data_source_impl.dart'
+    as _i233;
+import '../../presentation/search/Data/Data%20Sources/remote/search_remote_data_source.dart'
+    as _i628;
+import '../../presentation/search/Data/Repository/search_repository_impl.dart'
+    as _i959;
+import '../../presentation/search/Domain/Repository/search_repository.dart'
+    as _i1006;
+import '../../presentation/search/Domain/Use%20Case/search_use_case.dart'
+    as _i586;
+import '../../presentation/search/ui/cubit/search_view_model.dart' as _i183;
 import '../api%20manager/api_manager.dart' as _i949;
 
 extension GetItInjectableX on _i174.GetIt {
@@ -63,6 +74,8 @@ extension GetItInjectableX on _i174.GetIt {
     gh.singleton<_i949.ApiManager>(() => _i949.ApiManager());
     gh.factory<_i252.HomeRemoteDataSource>(() =>
         _i769.HomeRemoteDataSourceImpl(apiManager: gh<_i949.ApiManager>()));
+    gh.factory<_i628.SearchRemoteDataSource>(() =>
+        _i233.SearchRemoteDataSourceImpl(apiManager: gh<_i949.ApiManager>()));
     gh.factory<_i649.MovieDetailsRemoteDataSource>(() =>
         _i859.MovieDetailsRemoteDataSourceImpl(
             apiManager: gh<_i949.ApiManager>()));
@@ -76,8 +89,14 @@ extension GetItInjectableX on _i174.GetIt {
         _i376.MovieDetailsRepositoryImpl(
             movieDetailsRemoteDataSource:
                 gh<_i649.MovieDetailsRemoteDataSource>()));
+    gh.factory<_i1006.SearchRepository>(() => _i959.SearchRepositoryImpl(
+        searchRemoteDataSource: gh<_i628.SearchRemoteDataSource>()));
+    gh.factory<_i586.SearchUseCase>(() =>
+        _i586.SearchUseCase(searchRepository: gh<_i1006.SearchRepository>()));
     gh.factory<_i1003.HomeUseCase>(
         () => _i1003.HomeUseCase(homeRepository: gh<_i33.HomeRepository>()));
+    gh.factory<_i183.SearchViewModel>(
+        () => _i183.SearchViewModel(searchUseCase: gh<_i586.SearchUseCase>()));
     gh.factory<_i105.AuthUseCase>(
         () => _i105.AuthUseCase(authRepository: gh<_i471.AuthRepository>()));
     gh.factory<_i843.MovieDetailsUseCase>(() => _i843.MovieDetailsUseCase(

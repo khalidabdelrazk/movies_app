@@ -10,16 +10,45 @@ class SearchViewModel extends HydratedCubit<SearchStates> {
 
   SearchViewModel({required this.searchUseCase}) : super(SearchLoadingState());
 
-  void ggetMoviesByQuery({required String queryTerm, required num limit, required num page, }) async {
-    emit(SearchLoadingState());
+  void getMoviesByQuery({
+    required String queryTerm,
+    required num limit,
+    required num page,
+  }) async {
+    if (page == 1) emit(SearchLoadingState());
 
-    final result = await searchUseCase.invoke(queryTerm: queryTerm, limit: limit, page: page);
+    final result = await searchUseCase.invoke(
+      queryTerm: queryTerm,
+      limit: limit,
+      page: page,
+    );
 
     result.fold(
           (failure) => emit(SearchErrorState(message: failure.errorMessage)),
-          (response) => emit(SearchSuccessState(searchResponseEntity: response)),
+          (response) {
+        if (page == 1) {
+          emit(SearchSuccessState(searchResponseEntity: response));
+        } else {
+          final currentState = state;
+          if (currentState is SearchSuccessState) {
+            final oldData = currentState.searchResponseEntity.data as DataSearchEntity;
+            final newData = response.data as DataSearchEntity;
+
+            final updatedData = oldData.copyWith(
+              movies: [...oldData.movies ?? [], ...newData.movies ?? []],
+            );
+
+            final updatedEntity = currentState.searchResponseEntity.copyWith(
+              data: updatedData,
+            );
+
+            emit(SearchSuccessState(searchResponseEntity: updatedEntity));
+          }
+        }
+      },
     );
   }
+
 
   @override
   SearchStates? fromJson(Map<String, dynamic> json) {

@@ -14,6 +14,20 @@ class SearchResponseEntity extends MoviesResponseEntity {
     meta = json['MetaEntity'] != null ? MetaEntity.fromJson(json['MetaEntity']) : null;
   }
 
+  SearchResponseEntity copyWith({
+    String? status,
+    String? statusMessage,
+    DataSearchEntity? data,
+    MetaEntity? meta,
+  }) {
+    return SearchResponseEntity(
+      status: status ?? this.status,
+      statusMessage: statusMessage ?? this.statusMessage,
+      data: data ?? this.data as DataSearchEntity?,
+      meta: meta ?? this.meta,
+    );
+  }
+
   @override
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -73,6 +87,23 @@ class DataSearchEntity extends DataEntity {
         movies?.add(MoviesSearchEntity.fromJson(v));
       });
     }
+
+
+
+  }
+
+  DataSearchEntity copyWith({
+    int? movieCount,
+    int? limit,
+    int? pageNumber,
+    List<MoviesEntity>? movies,
+  }) {
+    return DataSearchEntity(
+      movieCount: movieCount ?? this.movieCount,
+      limit: limit ?? this.limit,
+      pageNumber: pageNumber ?? this.pageNumber,
+      movies: movies ?? this.movies,
+    );
   }
 
 
@@ -87,6 +118,7 @@ class DataSearchEntity extends DataEntity {
     }
     return map;
   }
+
 
 }
 
