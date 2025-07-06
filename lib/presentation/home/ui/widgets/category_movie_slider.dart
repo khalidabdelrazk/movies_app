@@ -49,7 +49,7 @@ class _CategoryMovieSliderState extends State<CategoryMovieSlider> {
             bloc: homeViewModel,
             builder: (context, state) {
               if (state is MostPopularErrorState) {
-                return NetworkErrorWidget(errorMsg: state.message!, large: false,onTap: () async => homeViewModel.getMostPopularMovies,);
+                return NetworkErrorWidget(errorMsg: state.message, large: false,onTap: () async => homeViewModel.getMostPopularMovies,);
               } else if (state is MostPopularSuccessState) {
                 List<MoviesEntity> movies = state.moviesResponseEntity.data?.movies ?? [];
                 return Expanded(

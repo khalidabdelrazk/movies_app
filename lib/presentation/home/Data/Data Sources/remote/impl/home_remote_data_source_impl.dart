@@ -14,10 +14,9 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
   ApiManager apiManager;
   HomeRemoteDataSourceImpl({required this.apiManager});
 
-
-
   @override
-  Future<Either<Failures, MoviesResponseEntity>> getMostPopular(String? genre) async{
+  Future<Either<Failures, MoviesResponseEntity>> getMostPopular(
+      String? genre) async {
     final List<ConnectivityResult> connectivityResult =
         await Connectivity().checkConnectivity();
     try {
@@ -29,13 +28,10 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
           !connectivityResult.contains(ConnectivityResult.none) ||
           connectivityResult.contains(ConnectivityResult.mobile)) {
         Map<String, dynamic> queryParams = {};
-        if(genre != null){
-          queryParams.addAll(
-            {
-              "genre" : genre
-            }
-          );
+        if (genre != null) {
+          queryParams.addAll({"genre": genre});
         }
+        queryParams.addAll({'limit': 10});
         var response = await apiManager.getData(
           path: ApiEndpoints.listMovies,
           queryParameters: queryParams,
@@ -59,112 +55,3 @@ class HomeRemoteDataSourceImpl implements HomeRemoteDataSource {
     }
   }
 }
-
-/*
-  @override
-  Future<Either<Failures, RegisterResponseEntity>> register(
-      String? name,
-      String? email,
-      String? password,
-      String? rePassword,
-      String? phone,
-      int? avatarId) async {
-    print(
-        'name: $name,email: $email,password: $password,rePassword: $rePassword,phone: $phone,avaterId: $avatarId');
-    final List<ConnectivityResult> connectivityResult =
-        await Connectivity().checkConnectivity();
-    try {
-      if (connectivityResult.contains(ConnectivityResult.wifi) ||
-          connectivityResult.contains(ConnectivityResult.ethernet) ||
-          connectivityResult.contains(ConnectivityResult.vpn) ||
-          connectivityResult.contains(ConnectivityResult.bluetooth) ||
-          connectivityResult.contains(ConnectivityResult.other) ||
-          !connectivityResult.contains(ConnectivityResult.none) ||
-          connectivityResult.contains(ConnectivityResult.mobile)) {
-        var response = await apiManager.postData(
-          path: ApiEndpoints.register,
-          data: {
-            "name": name,
-            "email": email,
-            "password": password,
-            "confirmPassword": rePassword,
-            "phone": phone,
-            "avaterId": avatarId
-          },
-          options: Options(
-            headers: {"Content-Type": "application/json"},
-            validateStatus: (status) => true,
-          ),
-        );
-        RegisterResponseDm registerResponse = RegisterResponseDm.fromJson(
-          response.data,
-        );
-        print("RESPONSE BODY: ${response.data}");
-        print("STATUS CODE: ${response.statusCode}");
-        if (response.statusCode! >= 200 && response.statusCode! < 300) {
-          return Right(registerResponse);
-        }
-        return Left(ServerError(errorMessage: registerResponse.message!));
-      } else {
-        return Left(NetworkError(errorMessage: "Network Error"));
-      }
-    } catch (e) {
-      print('Hello');
-      return Left(ServerError(errorMessage: e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<Failures, LoginResponseEntity>> login(
-      String? email, String? password) async {
-    print('email: $email,password: $password,');
-    final List<ConnectivityResult> connectivityResult =
-        await Connectivity().checkConnectivity();
-    try {
-      if (connectivityResult.contains(ConnectivityResult.wifi) ||
-          connectivityResult.contains(ConnectivityResult.ethernet) ||
-          connectivityResult.contains(ConnectivityResult.vpn) ||
-          connectivityResult.contains(ConnectivityResult.bluetooth) ||
-          connectivityResult.contains(ConnectivityResult.other) ||
-          !connectivityResult.contains(ConnectivityResult.none) ||
-          connectivityResult.contains(ConnectivityResult.mobile)) {
-        var response = await apiManager.postData(
-          path: ApiEndpoints.login,
-          data: {
-            "email": email,
-            "password": password,
-          },
-          options: Options(
-            headers: {"Content-Type": "application/json"},
-            validateStatus: (status) => true,
-          ),
-        );
-        LoginResponseDm loginResponseDm = LoginResponseDm.fromJson(
-          response.data,
-        );
-        print("RESPONSE BODY: ${response.data}");
-        print("STATUS CODE: ${response.statusCode}");
-        if (response.statusCode! >= 200 && response.statusCode! < 300) {
-          return Right(loginResponseDm);
-        }
-        return Left(ServerError(
-            errorMessage: _extractMessage(loginResponseDm.message)));
-      } else {
-        return Left(NetworkError(errorMessage: "Network Error"));
-      }
-    } catch (e) {
-      print('Hello');
-      return Left(ServerError(errorMessage: e.toString()));
-    }
-  }
-
-  String _extractMessage(dynamic message) {
-    if (message is String) {
-      return message;
-    } else if (message is List) {
-      return message.join('\n');
-    } else {
-      return "Unexpected error occurred";
-    }
-  }
- */

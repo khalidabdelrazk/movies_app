@@ -38,7 +38,7 @@ class _MostPopularState extends State<MostPopularSlider> {
         builder: (context, state) {
           if (state is MostPopularErrorState) {
             return NetworkErrorWidget(
-              errorMsg: state.message!,
+              errorMsg: state.message,
               large: false,
               onTap: () async => homeViewModel.getMostPopularMovies,
             );

@@ -17,51 +17,52 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: double.infinity,
-        decoration: BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage(AppAssets.onBoarding6),
-            fit: BoxFit.cover,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(AppAssets.onBoarding6),
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: SizedBox(
-                width: 267.w,
-                height: 93.h,
-                child: Image.asset(AppAssets.available),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 360.h,
-                child: const MostPopularSlider(),
-              ),
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                width: 267.w,
-                height: 93.h,
-                child: Image.asset(AppAssets.watchNow),
-              ),
-            ),
-            SliverList(
-              delegate: SliverChildBuilderDelegate(
-                    (context, index) => Padding(
-                  padding: EdgeInsets.only(top: 8.h, left: 16.w),
-                  child: CategoryMovieSlider(
-                    key: ValueKey(genre[index]), // ✅ Unique key
-                    genre: genre[index],
+          child: SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    width: 267.w,
+                    height: 93.h,
+                    child: Image.asset(AppAssets.available),
                   ),
                 ),
-                childCount: genre.length,
-              ),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 360.h,
+                    child: const MostPopularSlider(),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    width: 267.w,
+                    height: 93.h,
+                    child: Image.asset(AppAssets.watchNow),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) => Padding(
+                      padding: EdgeInsets.only(top: 8.h, left: 16.w),
+                      child: CategoryMovieSlider(
+                        key: ValueKey(genre[index]), // ✅ Unique key
+                        genre: genre[index],
+                      ),
+                    ),
+                    childCount: genre.length,
+                  ),
+                ),
+                SliverToBoxAdapter(child: SizedBox(height: 70.h)),
+              ],
             ),
-            SliverToBoxAdapter(child: SizedBox(height: 70.h)),
-          ],
-        ),
-      ),
+          )),
     );
   }
 }

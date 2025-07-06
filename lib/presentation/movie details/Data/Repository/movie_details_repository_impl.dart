@@ -1,6 +1,5 @@
 import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
-import 'package:movies/presentation/movie%20details/Data/Models/movie_details_response_dm.dart';
 import 'package:movies/presentation/movie%20details/Domain/Entity/movie_details_response_entity.dart';
 import 'package:movies/presentation/movie%20details/Domain/Entity/movie_suggestion_response_entity.dart';
 import '../../../../core/model/failures.dart';
