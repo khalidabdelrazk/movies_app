@@ -10,7 +10,9 @@ import '../cubit/home_states.dart';
 import '../cubit/home_view_model.dart';
 
 class MostPopularSlider extends StatefulWidget {
-  const MostPopularSlider({super.key,});
+  const MostPopularSlider({
+    super.key,
+  });
 
   @override
   State<MostPopularSlider> createState() => _MostPopularState();
@@ -23,7 +25,10 @@ class _MostPopularState extends State<MostPopularSlider> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    homeViewModel.getMostPopularMovies();
+    final currentState = homeViewModel.state;
+    if (currentState is! MostPopularSuccessState) {
+      homeViewModel.getMostPopularMovies();
+    }
   }
 
   @override
@@ -32,9 +37,14 @@ class _MostPopularState extends State<MostPopularSlider> {
         bloc: homeViewModel,
         builder: (context, state) {
           if (state is MostPopularErrorState) {
-            return NetworkErrorWidget(errorMsg: state.message!, large: false,onTap: () async => homeViewModel.getMostPopularMovies,);
+            return NetworkErrorWidget(
+              errorMsg: state.message!,
+              large: false,
+              onTap: () async => homeViewModel.getMostPopularMovies,
+            );
           } else if (state is MostPopularSuccessState) {
-            List<MoviesEntity> movies = state.moviesResponseEntity.data?.movies ?? [];
+            List<MoviesEntity> movies =
+                state.moviesResponseEntity.data?.movies ?? [];
             return CarouselSlider.builder(
               options: CarouselOptions(
                 height: 351.h,

@@ -39,29 +39,5 @@ class ScreenshotsSection extends StatelessWidget {
         },
       ),
     );
-
-    return SizedBox(
-      child: ListView.separated(
-        scrollDirection: Axis.vertical,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        itemCount: screenshots.length,
-        separatorBuilder: (context, index) => SizedBox(width: 12.w),
-        itemBuilder: (context, index) {
-          final imageUrl = screenshots[index] ?? '';
-
-          return ClipRRect(
-            borderRadius: BorderRadius.circular(12.r),
-            child: Image.network(
-              imageUrl,
-              width: 280.w,
-              height: 180.h,
-              fit: BoxFit.cover,
-              errorBuilder: (context, error, stackTrace) =>
-                  Container(color: Colors.grey, width: 280.w, height: 180.h),
-            ),
-          );
-        },
-      ),
-    );
   }
 }

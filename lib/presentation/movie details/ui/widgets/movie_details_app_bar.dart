@@ -3,59 +3,119 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/presentation/movie%20details/Domain/Entity/movie_details_response_entity.dart';
 
-class MovieDetailsAppBar extends StatelessWidget {
+class MovieDetailsAppBar extends StatefulWidget {
   final MovieDetailsResponseEntity movie;
 
   const MovieDetailsAppBar({super.key, required this.movie});
 
   @override
+  State<MovieDetailsAppBar> createState() => _MovieDetailsAppBarState();
+}
+
+class _MovieDetailsAppBarState extends State<MovieDetailsAppBar> {
+  bool isCollapsed = false;
+
+  @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      elevation: 0,
-      foregroundColor: AppColors.transparent,
-      surfaceTintColor: AppColors.transparent,
+      pinned: false, // ❌ not pinned
+      stretch: true,
       expandedHeight: 500.h,
       backgroundColor: AppColors.scaffoldBgColor,
-      flexibleSpace: FlexibleSpaceBar(
-        background: Stack(
-          fit: StackFit.expand,
-          children: [
-            Image.network(
-              movie.data?.movie?.largeCoverImage ?? '',
-              fit: BoxFit.cover,
-              height: 500.h,
-            ),
-            Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Colors.transparent,
-                    AppColors.scaffoldBgColor,
-                  ],
-                  stops: [0.6, 1.0],
+      elevation: 0,
+      foregroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      flexibleSpace: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          if (notification.metrics.axis == Axis.vertical) {
+            final shouldCollapse =
+                notification.metrics.pixels > (500.h - kToolbarHeight - 30);
+            if (shouldCollapse != isCollapsed) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) {
+                  setState(() {
+                    isCollapsed = shouldCollapse;
+                  });
+                }
+              });
+            }
+          }
+          return false;
+        },
+        child: FlexibleSpaceBar(
+          background: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Background Image
+              Image.network(
+                widget.movie.data?.movie?.largeCoverImage ?? '',
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => const SizedBox.shrink(),
+              ),
+
+              // Gradient Overlay
+              Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      Colors.transparent,
+                      AppColors.scaffoldBgColor,
+                    ],
+                    stops: [0.6, 1.0],
+                  ),
                 ),
               ),
-            ),
-          ],
+
+              // Center Play Button
+              if (!isCollapsed)
+                Center(
+                  child: CircleAvatar(
+                    radius: 36.r,
+                    backgroundColor: AppColors.primaryYellowColor,
+                    child: Icon(
+                      Icons.play_arrow,
+                      color: AppColors.scaffoldBgColor,
+                      size: 40.r,
+                    ),
+                  ),
+                ),
+
+              // Title + Year
+              if (!isCollapsed)
+                Positioned(
+                  bottom: 32.h,
+                  left: 0,
+                  right: 0,
+                  child: Column(
+                    children: [
+                      Text(
+                        widget.movie.data?.movie?.title ??
+                            'Unknown Title',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: AppColors.light,
+                          fontSize: 22.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 4.h),
+                      Text(
+                        widget.movie.data?.movie?.year?.toString() ??
+                            'Unknown Year',
+                        style: TextStyle(
+                          color: AppColors.gray,
+                          fontSize: 14.sp,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios, color: AppColors.light, size: 24.r),
-        onPressed: () {
-          Navigator.of(context).pop();
-        },
-      ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.bookmark_outline,
-              color: AppColors.light, size: 24.r),
-          onPressed: () {
-            // Handle bookmark
-          },
-        ),
-      ],
     );
   }
 }
