@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movies/core/di/di.dart';
 import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/core/theme/app_styles.dart';
-import 'package:movies/presentation/home/Domain/Entity/movies_response_entity.dart';
+import 'package:movies/presentation/browse/ui/cubit/explore_states.dart';
+import 'package:movies/presentation/browse/ui/cubit/explore_view_model.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/utils/movie_card.dart';
+import '../../../core/utils/network_error_widget.dart'; // ✅ Make sure it's imported
 
 class BrowsePage extends StatefulWidget {
   const BrowsePage({super.key});
@@ -14,23 +18,27 @@ class BrowsePage extends StatefulWidget {
 }
 
 class _BrowsePageState extends State<BrowsePage> {
-  String selectedGenre = genre[0];
-  late ScrollController _scrollController;
-  late ScrollController _chipsScrollController;
+  final exploreViewModel = getIt<ExploreViewModel>();
+  final ScrollController _scrollController = ScrollController();
+  final ScrollController _chipsScrollController = ScrollController();
   late List<GlobalKey> _chipKeys;
 
-  List<MoviesEntity> movies = [];
-  int currentPage = 1;
-  bool isLoadingMore = false;
-  final int pageSize = 6;
+  String selectedGenre = genre[0];
 
   @override
   void initState() {
     super.initState();
-    _chipsScrollController = ScrollController();
-    _scrollController = ScrollController()..addListener(_scrollListener);
     _chipKeys = List.generate(genre.length, (_) => GlobalKey());
-    _loadInitialMovies();
+    exploreViewModel.fetchInitialMovies(selectedGenre);
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 100 &&
+        !exploreViewModel.isLoadingMore) {
+      exploreViewModel.fetchMoreMovies();
+    }
   }
 
   void _scrollToSelectedChip(int index) {
@@ -45,64 +53,12 @@ class _BrowsePageState extends State<BrowsePage> {
     }
   }
 
-  void _scrollListener() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 100 &&
-        !isLoadingMore) {
-      _loadMoreMovies();
-    }
-  }
-
-  void _loadInitialMovies() {
-    setState(() {
-      movies = List.generate(
-        pageSize,
-            (index) => MoviesEntity(
-          title: "Movie $index",
-          mediumCoverImage: "https://i.imgur.com/8UG2N6Q.jpg",
-          rating: 7.7,
-          imdbCode: "tt123456$index",
-        ),
-      );
-    });
-  }
-
-  Future<void> _loadMoreMovies() async {
-    setState(() => isLoadingMore = true);
-
-    await Future.delayed(const Duration(seconds: 2)); // Simulate API delay
-
-    final newMovies = List.generate(
-      pageSize,
-          (index) => MoviesEntity(
-        title: "Movie ${movies.length + index}",
-        mediumCoverImage: "https://i.imgur.com/8UG2N6Q.jpg",
-        rating: 7.7,
-        imdbCode: "tt123456${movies.length + index}",
-      ),
-    );
-
-    setState(() {
-      movies.addAll(newMovies);
-      currentPage++;
-      isLoadingMore = false;
-    });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    _chipsScrollController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.scaffoldBgColor,
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Genre Chips
             SizedBox(
@@ -122,14 +78,13 @@ class _BrowsePageState extends State<BrowsePage> {
                     onTap: () {
                       setState(() {
                         selectedGenre = item;
-                        currentPage = 1;
-                        movies.clear();
-                        _loadInitialMovies(); // reload for new genre
                       });
+                      exploreViewModel.fetchInitialMovies(item);
                       _scrollToSelectedChip(index);
                     },
                     child: Container(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                      padding:
+                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                       decoration: BoxDecoration(
                         color: isSelected
                             ? AppColors.primaryYellowColor
@@ -153,34 +108,51 @@ class _BrowsePageState extends State<BrowsePage> {
 
             // Movie Grid
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 12.w),
-                child: GridView.builder(
-                  controller: _scrollController,
-                  itemCount: movies.length + (isLoadingMore ? 2 : 0),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12.w,
-                    mainAxisSpacing: 16.h,
-                    childAspectRatio: 0.65,
-                  ),
-                  itemBuilder: (context, index) {
-                    if (index < movies.length) {
-                      return MoviePosterCard(movie: movies[index]);
-                    } else {
-                      return Center(
-                        child: SizedBox(
-                          width: 28.sp,
-                          height: 28.sp,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: AppColors.primaryYellowColor,
-                          ),
-                        ),
-                      );
-                    }
-                  },
-                ),
+              child: BlocBuilder<ExploreViewModel, ExploreStates>(
+                bloc: exploreViewModel,
+                builder: (context, state) {
+                  if (state is ExploreLoadingState &&
+                      exploreViewModel.currentPage == 1) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (state is ExploreErrorState) {
+                    return NetworkErrorWidget(
+                      errorMsg: state.errMessage,
+                      large: true,
+                    );
+                  } else if (state is ExploreSuccessState) {
+                    final movies = state.exploreResponseEntity.data?.movies ?? [];
+
+                    return GridView.builder(
+                      controller: _scrollController,
+                      itemCount: movies.length +
+                          (exploreViewModel.isLoadingMore ? 1 : 0),
+                      padding: EdgeInsets.symmetric(horizontal: 12.w),
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 12.w,
+                        mainAxisSpacing: 16.h,
+                        childAspectRatio: 0.65,
+                      ),
+                      itemBuilder: (context, index) {
+                        if (index < movies.length) {
+                          return MoviePosterCard(movie: movies[index]);
+                        } else {
+                          return Center(
+                            child: SizedBox(
+                              width: 24.sp,
+                              height: 24.sp,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: AppColors.primaryYellowColor,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                    );
+                  }
+                  return const SizedBox.shrink();
+                },
               ),
             ),
           ],

@@ -24,6 +24,17 @@ import '../../presentation/authentication/Domain/Use%20Case/auth_use_case.dart'
     as _i105;
 import '../../presentation/authentication/ui/cubit/authentication/auth_view_model.dart'
     as _i212;
+import '../../presentation/browse/Data/Data%20Sources/remote/explore_remote_data_source.dart'
+    as _i280;
+import '../../presentation/browse/Data/Data%20Sources/remote/impl/explore_remote_data_source_impl.dart'
+    as _i523;
+import '../../presentation/browse/Data/Repository/explore_repository_impl.dart'
+    as _i506;
+import '../../presentation/browse/Domain/Repository/explore_repository.dart'
+    as _i433;
+import '../../presentation/browse/Domain/Use%20Case/explore_use_case.dart'
+    as _i679;
+import '../../presentation/browse/ui/cubit/explore_view_model.dart' as _i524;
 import '../../presentation/home/Data/Data%20Sources/remote/home_remote_data_source.dart'
     as _i252;
 import '../../presentation/home/Data/Data%20Sources/remote/impl/home_remote_data_source_impl.dart'
@@ -81,6 +92,8 @@ extension GetItInjectableX on _i174.GetIt {
             apiManager: gh<_i949.ApiManager>()));
     gh.factory<_i293.AuthRemoteDataSource>(() =>
         _i1054.AuthRemoteDataSourceImpl(apiManager: gh<_i949.ApiManager>()));
+    gh.factory<_i280.ExploreRemoteDataSource>(() =>
+        _i523.ExploreRemoteDataSourceImpl(apiManager: gh<_i949.ApiManager>()));
     gh.factory<_i33.HomeRepository>(() => _i971.HomeRepositoryImpl(
         homeRemoteDataSource: gh<_i252.HomeRemoteDataSource>()));
     gh.factory<_i471.AuthRepository>(() => _i659.AuthRepositoryImpl(
@@ -91,6 +104,8 @@ extension GetItInjectableX on _i174.GetIt {
                 gh<_i649.MovieDetailsRemoteDataSource>()));
     gh.factory<_i1006.SearchRepository>(() => _i959.SearchRepositoryImpl(
         searchRemoteDataSource: gh<_i628.SearchRemoteDataSource>()));
+    gh.factory<_i433.ExploreRepository>(() => _i506.ExploreRepositoryImpl(
+        exploreRemoteDataSource: gh<_i280.ExploreRemoteDataSource>()));
     gh.factory<_i586.SearchUseCase>(() =>
         _i586.SearchUseCase(searchRepository: gh<_i1006.SearchRepository>()));
     gh.factory<_i1003.HomeUseCase>(
@@ -103,6 +118,8 @@ extension GetItInjectableX on _i174.GetIt {
         movieDetailsRepository: gh<_i240.MovieDetailsRepository>()));
     gh.factory<_i235.MovieSuggestionUseCase>(() => _i235.MovieSuggestionUseCase(
         movieDetailsRepository: gh<_i240.MovieDetailsRepository>()));
+    gh.factory<_i679.ExploreUseCase>(() =>
+        _i679.ExploreUseCase(exploreRepository: gh<_i433.ExploreRepository>()));
     gh.factory<_i755.MovieDetailsViewModel>(() => _i755.MovieDetailsViewModel(
           gh<_i235.MovieSuggestionUseCase>(),
           movieDetailsUseCase: gh<_i843.MovieDetailsUseCase>(),
@@ -111,6 +128,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i46.HomeViewModel(homeUseCase: gh<_i1003.HomeUseCase>()));
     gh.factory<_i212.AuthViewModel>(
         () => _i212.AuthViewModel(authUseCase: gh<_i105.AuthUseCase>()));
+    gh.factory<_i524.ExploreViewModel>(() =>
+        _i524.ExploreViewModel(exploreUseCase: gh<_i679.ExploreUseCase>()));
     return this;
   }
 }

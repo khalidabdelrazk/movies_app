@@ -1,19 +1,55 @@
 import '../../../home/Domain/Entity/movies_response_entity.dart';
 
-class ExploreResponseEntity extends MoviesResponseEntity{
+import '../../../home/Domain/Entity/movies_response_entity.dart';
+
+class ExploreResponseEntity extends MoviesResponseEntity {
   ExploreResponseEntity({
-      super.status,
-      super.statusMessage,
-      super.data,
-      super.meta,});
+    super.status,
+    super.statusMessage,
+    super.data,
+    super.meta,
+  });
 
   ExploreResponseEntity.fromJson(dynamic json) {
     status = json['status'];
     statusMessage = json['status_message'];
     data = json['data'] != null ? DataExploreEntity.fromJson(json['data']) : null;
-    meta = json['MetaExploreEntity'] != null ? MetaExploreEntity.fromJson(json['MetaExploreEntity']) : null;
+    meta = json['MetaExploreEntity'] != null
+        ? MetaExploreEntity.fromJson(json['MetaExploreEntity'])
+        : null;
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['status'] = status;
+    map['status_message'] = statusMessage;
+    if (data != null) {
+      map['data'] = data?.toJson();
+    }
+    if (meta != null) {
+      map['MetaEntity'] = meta?.toJson();
+    }
+    return map;
+  }
+
+  ExploreResponseEntity copyWith({
+    String? status,
+    String? statusMessage,
+    DataExploreEntity? data,
+    MetaExploreEntity? meta,
+    List<MoviesExploreEntity>? movies,
+  }) {
+    final copiedData = (data ?? this.data) as DataExploreEntity?;
+    return ExploreResponseEntity(
+      status: status ?? this.status,
+      statusMessage: statusMessage ?? this.statusMessage,
+      data: copiedData?.copyWith(movies: movies),
+      meta: meta ?? this.meta as MetaExploreEntity?,
+    );
   }
 }
+
 
 class MetaExploreEntity extends MetaEntity {
   MetaExploreEntity({
@@ -31,12 +67,13 @@ class MetaExploreEntity extends MetaEntity {
 
 }
 
-class DataExploreEntity extends DataEntity{
+class DataExploreEntity extends DataEntity {
   DataExploreEntity({
-      super.movieCount,
-      super.limit,
-      super.pageNumber,
-      super.movies,});
+    super.movieCount,
+    super.limit,
+    super.pageNumber,
+    super.movies,
+  });
 
   DataExploreEntity.fromJson(dynamic json) {
     movieCount = json['movie_count'];
@@ -49,7 +86,34 @@ class DataExploreEntity extends DataEntity{
       });
     }
   }
+
+  DataExploreEntity copyWith({
+    int? movieCount,
+    int? limit,
+    int? pageNumber,
+    List<MoviesExploreEntity>? movies,
+  }) {
+    return DataExploreEntity(
+      movieCount: movieCount ?? this.movieCount,
+      limit: limit ?? this.limit,
+      pageNumber: pageNumber ?? this.pageNumber,
+      movies: movies ?? this.movies,
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson() {
+    final map = <String, dynamic>{};
+    map['movie_count'] = movieCount;
+    map['limit'] = limit;
+    map['page_number'] = pageNumber;
+    if (movies != null) {
+      map['movies'] = movies?.map((v) => v.toJson()).toList();
+    }
+    return map;
+  }
 }
+
 
 class MoviesExploreEntity extends MoviesEntity{
   MoviesExploreEntity({

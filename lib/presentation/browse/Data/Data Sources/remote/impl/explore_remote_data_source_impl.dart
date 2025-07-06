@@ -8,7 +8,7 @@ import '../../../../../../core/api manager/api_manager.dart';
 import '../../../Models/explore_response_dm.dart';
 import '../explore_remote_data_source.dart';
 
-@Injectable(as: ExploreResponseDm)
+@Injectable(as: ExploreRemoteDataSource)
 class ExploreRemoteDataSourceImpl implements ExploreRemoteDataSource {
   ApiManager apiManager;
   ExploreRemoteDataSourceImpl({required this.apiManager});
