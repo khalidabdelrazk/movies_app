@@ -12,8 +12,8 @@ class MovieDetailsResponseDm extends MovieDetailsResponseEntity{
     status = json['status'];
     message = json['message'];
     statusMessage = json['status_message'];
-    data = json['data'] != null ? Data.fromJson(json['data']) : null;
-    meta = json['@meta'] != null ? Meta.fromJson(json['@meta']) : null;
+    data = json['data'] != null ? DataMovieSuggestionEntity.fromJson(json['data']) : null;
+    meta = json['@meta'] != null ? MetaMovieSuggestionEntity.fromJson(json['@meta']) : null;
   }
   String? message;
 
@@ -33,14 +33,14 @@ class MovieDetailsResponseDm extends MovieDetailsResponseEntity{
 
 }
 
-class Meta extends MetaMovieDetails {
-  Meta({
+class MetaMovieSuggestionEntity extends MetaMovieDetails {
+  MetaMovieSuggestionEntity({
       super.serverTime,
       super.serverTimezone,
       super.apiVersion,
       super.executionTime,});
 
-  Meta.fromJson(dynamic json) {
+  MetaMovieSuggestionEntity.fromJson(dynamic json) {
     serverTime = json['server_time'];
     serverTimezone = json['server_timezone'];
     apiVersion = json['api_version'];
@@ -59,12 +59,12 @@ class Meta extends MetaMovieDetails {
 
 }
 
-class Data extends DataMovieDetails {
-  Data({
+class DataMovieSuggestionEntity extends DataMovieDetails {
+  DataMovieSuggestionEntity({
       super.movie,});
 
-  Data.fromJson(dynamic json) {
-    movie = json['movie'] != null ? Movie.fromJson(json['movie']) : null;
+  DataMovieSuggestionEntity.fromJson(dynamic json) {
+    movie = json['movie'] != null ? MovieMovieSuggestionEntity.fromJson(json['movie']) : null;
   }
 
   @override
@@ -78,8 +78,8 @@ class Data extends DataMovieDetails {
 
 }
 
-class Movie extends MovieMovieDetails {
-  Movie({
+class MovieMovieSuggestionEntity extends MovieMovieDetails {
+  MovieMovieSuggestionEntity({
       super.id,
       super.url,
       super.imdbCode,
@@ -113,7 +113,7 @@ class Movie extends MovieMovieDetails {
       super.dateUploaded,
       super.dateUploadedUnix,});
 
-  Movie.fromJson(dynamic json) {
+  MovieMovieSuggestionEntity.fromJson(dynamic json) {
     id = json['id'];
     url = json['url'];
     imdbCode = json['imdb_code'];
@@ -145,13 +145,13 @@ class Movie extends MovieMovieDetails {
     if (json['cast'] != null) {
       cast = [];
       json['cast'].forEach((v) {
-        cast?.add(Cast.fromJson(v));
+        cast?.add(CastMovieSuggestionEntity.fromJson(v));
       });
     }
     if (json['torrents'] != null) {
       torrents = [];
       json['torrents'].forEach((v) {
-        torrents?.add(Torrents.fromJson(v));
+        torrents?.add(TorrentsMovieSuggestionEntity.fromJson(v));
       });
     }
     dateUploaded = json['date_uploaded'];
@@ -203,8 +203,8 @@ class Movie extends MovieMovieDetails {
 
 }
 
-class Torrents extends TorrentsMovieDetails {
-  Torrents({
+class TorrentsMovieSuggestionEntity extends TorrentsMovieDetails {
+  TorrentsMovieSuggestionEntity({
       super.url,
       super.hash,
       super.quality,
@@ -220,7 +220,7 @@ class Torrents extends TorrentsMovieDetails {
       super.dateUploaded,
       super.dateUploadedUnix,});
 
-  Torrents.fromJson(dynamic json) {
+  TorrentsMovieSuggestionEntity.fromJson(dynamic json) {
     url = json['url'];
     hash = json['hash'];
     quality = json['quality'];
@@ -260,13 +260,13 @@ class Torrents extends TorrentsMovieDetails {
 
 }
 
-class Cast extends CastMovieDetails {
-  Cast({
+class CastMovieSuggestionEntity extends CastMovieDetails {
+  CastMovieSuggestionEntity({
       super.name,
       super.characterName,
       super.imdbCode,});
 
-  Cast.fromJson(dynamic json) {
+  CastMovieSuggestionEntity.fromJson(dynamic json) {
     name = json['name'];
     characterName = json['character_name'];
     imdbCode = json['imdb_code'];

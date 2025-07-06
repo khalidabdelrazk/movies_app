@@ -17,79 +17,39 @@ class CastSection extends StatelessWidget {
     return Column(
       spacing: 10.h,
       children: List.generate(
-          castList.length,
-          (index) => Container(
-            padding: EdgeInsets.symmetric(horizontal: 5,vertical: 10),
-            decoration: BoxDecoration(
-              color: AppColors.scaffoldBgColor,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Image.asset(AppAssets.profilePic5),
-                SizedBox(width: 10,),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Name :${castList[index].name ?? " "}",style: AppStyles.lightRegular16,textAlign: TextAlign.left,),
-                    Text("Character :${castList[index].characterName ?? " "}",style: AppStyles.lightRegular16,textAlign: TextAlign.left,),
-                  ],
-                )
-              ],
-            ),
+        castList.length,
+        (index) => Container(
+          padding: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+          decoration: BoxDecoration(
+            color: AppColors.scaffoldBgColor,
+            borderRadius: BorderRadius.circular(12),
           ),
-      ),
-    );
-
-
-    return SizedBox(
-      height: 180.h,
-      child: ListView.separated(
-        scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(horizontal: 16.w),
-        itemCount: castList.length,
-        separatorBuilder: (_, __) => SizedBox(width: 12.w),
-        itemBuilder: (context, index) {
-          final cast = castList[index];
-
-          return Column(
+          child: Row(
             children: [
-              CircleAvatar(
-                radius: 40.r,
-                backgroundColor: Colors.grey[800],
-              ),
-              SizedBox(height: 8.h),
+              Image.asset(AppAssets.profilePic5),
               SizedBox(
-                width: 80.w,
-                child: Text(
-                  cast.name ?? "Unknown",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppColors.light,
-                    fontSize: 12.sp,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
+                width: 10,
               ),
-              SizedBox(height: 4.h),
-              SizedBox(
-                width: 80.w,
-                child: Text(
-                  cast.characterName ?? "Character",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: AppColors.gray,
-                    fontSize: 10.sp,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Name :${castList[index].name ?? " "}",
+                    style: AppStyles.lightRegular16.copyWith(fontSize: 12),
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
+                  Text(
+                    "Character :${castList[index].characterName ?? " "}",
+                    style: AppStyles.lightRegular16.copyWith(fontSize: 12),
+                    textAlign: TextAlign.left,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
+              )
             ],
-          );
-        },
+          ),
+        ),
       ),
     );
   }

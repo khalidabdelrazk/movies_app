@@ -11,6 +11,9 @@ class MovieDetailsAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
+      elevation: 0,
+      foregroundColor: AppColors.transparent,
+      surfaceTintColor: AppColors.transparent,
       expandedHeight: 500.h,
       backgroundColor: AppColors.scaffoldBgColor,
       flexibleSpace: FlexibleSpaceBar(

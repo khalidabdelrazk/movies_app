@@ -2,13 +2,16 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:movies/presentation/movie%20details/Domain/Entity/movie_details_response_entity.dart';
 import 'package:movies/presentation/movie%20details/Domain/Use%20Case/movie_details_use_case.dart';
+import 'package:movies/presentation/movie%20details/Domain/Use%20Case/movie_suggestion_use_case.dart';
 import 'package:movies/presentation/movie%20details/ui/cubit/movie_details_states.dart';
 
 @injectable
 class MovieDetailsViewModel extends HydratedCubit<MovieDetailsStates> {
   final MovieDetailsUseCase movieDetailsUseCase;
+  final MovieSuggestionUseCase movieSuggestionUseCase;
 
-  MovieDetailsViewModel({required this.movieDetailsUseCase})
+
+  MovieDetailsViewModel(this.movieSuggestionUseCase, {required this.movieDetailsUseCase})
       : super(MovieDetailsInitState());
 
   void getMovieDetails({required String imdbId}) async {
@@ -20,6 +23,18 @@ class MovieDetailsViewModel extends HydratedCubit<MovieDetailsStates> {
       (failure) => emit(MovieDetailsErrorState(errMsg: failure.errorMessage)),
       (response) =>
           emit(MovieDetailsSuccessState(movieDetailsResponseEntity: response)),
+    );
+  }
+
+    void getMovieSuggestion({required String imdbId}) async {
+    emit(MovieSuggestionLoadingState());
+
+    final result = await movieSuggestionUseCase.invoke(imdbId);
+
+    result.fold(
+      (failure) => emit(MovieSuggestionErrorState(errMsg: failure.errorMessage)),
+      (response) =>
+          emit(MovieSuggestionSuccessState(movieSuggestionResponseEntity: response)),
     );
   }
 

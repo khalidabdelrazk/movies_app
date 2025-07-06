@@ -43,6 +43,8 @@ import '../../presentation/movie%20details/Domain/Repository/movie_details_repos
     as _i240;
 import '../../presentation/movie%20details/Domain/Use%20Case/movie_details_use_case.dart'
     as _i843;
+import '../../presentation/movie%20details/Domain/Use%20Case/movie_suggestion_use_case.dart'
+    as _i235;
 import '../../presentation/movie%20details/ui/cubit/movie_details_view_model.dart'
     as _i755;
 import '../api%20manager/api_manager.dart' as _i949;
@@ -80,8 +82,12 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i105.AuthUseCase(authRepository: gh<_i471.AuthRepository>()));
     gh.factory<_i843.MovieDetailsUseCase>(() => _i843.MovieDetailsUseCase(
         movieDetailsRepository: gh<_i240.MovieDetailsRepository>()));
+    gh.factory<_i235.MovieSuggestionUseCase>(() => _i235.MovieSuggestionUseCase(
+        movieDetailsRepository: gh<_i240.MovieDetailsRepository>()));
     gh.factory<_i755.MovieDetailsViewModel>(() => _i755.MovieDetailsViewModel(
-        movieDetailsUseCase: gh<_i843.MovieDetailsUseCase>()));
+          gh<_i235.MovieSuggestionUseCase>(),
+          movieDetailsUseCase: gh<_i843.MovieDetailsUseCase>(),
+        ));
     gh.factory<_i46.HomeViewModel>(
         () => _i46.HomeViewModel(homeUseCase: gh<_i1003.HomeUseCase>()));
     gh.factory<_i212.AuthViewModel>(
