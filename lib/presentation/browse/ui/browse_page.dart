@@ -3,10 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/core/theme/app_styles.dart';
 import 'package:movies/presentation/home/Domain/Entity/movies_response_entity.dart';
-
 import '../../../core/constants/constants.dart';
 import '../../../core/utils/movie_card.dart';
-
 
 class BrowsePage extends StatefulWidget {
   const BrowsePage({super.key});
@@ -18,25 +16,21 @@ class BrowsePage extends StatefulWidget {
 class _BrowsePageState extends State<BrowsePage> {
   String selectedGenre = genre[0];
   late ScrollController _scrollController;
-
-  // Keys for every chip to ensure visibility
+  late ScrollController _chipsScrollController;
   late List<GlobalKey> _chipKeys;
 
-  final List<MoviesEntity> dummyMovies = List.generate(
-    6,
-        (index) => MoviesEntity(
-      title: "Movie $index",
-      mediumCoverImage: "https://i.imgur.com/8UG2N6Q.jpg",
-      rating: 7.7,
-      imdbCode: "tt123456$index",
-    ),
-  );
+  List<MoviesEntity> movies = [];
+  int currentPage = 1;
+  bool isLoadingMore = false;
+  final int pageSize = 6;
 
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
+    _chipsScrollController = ScrollController();
+    _scrollController = ScrollController()..addListener(_scrollListener);
     _chipKeys = List.generate(genre.length, (_) => GlobalKey());
+    _loadInitialMovies();
   }
 
   void _scrollToSelectedChip(int index) {
@@ -46,9 +40,60 @@ class _BrowsePageState extends State<BrowsePage> {
         keyContext,
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeInOut,
-        alignment: 0.5, // Center the selected chip
+        alignment: 0.5,
       );
     }
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 100 &&
+        !isLoadingMore) {
+      _loadMoreMovies();
+    }
+  }
+
+  void _loadInitialMovies() {
+    setState(() {
+      movies = List.generate(
+        pageSize,
+            (index) => MoviesEntity(
+          title: "Movie $index",
+          mediumCoverImage: "https://i.imgur.com/8UG2N6Q.jpg",
+          rating: 7.7,
+          imdbCode: "tt123456$index",
+        ),
+      );
+    });
+  }
+
+  Future<void> _loadMoreMovies() async {
+    setState(() => isLoadingMore = true);
+
+    await Future.delayed(const Duration(seconds: 2)); // Simulate API delay
+
+    final newMovies = List.generate(
+      pageSize,
+          (index) => MoviesEntity(
+        title: "Movie ${movies.length + index}",
+        mediumCoverImage: "https://i.imgur.com/8UG2N6Q.jpg",
+        rating: 7.7,
+        imdbCode: "tt123456${movies.length + index}",
+      ),
+    );
+
+    setState(() {
+      movies.addAll(newMovies);
+      currentPage++;
+      isLoadingMore = false;
+    });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    _chipsScrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -59,11 +104,11 @@ class _BrowsePageState extends State<BrowsePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Genres Chips
+            // Genre Chips
             SizedBox(
               height: 40.h,
               child: ListView.separated(
-                controller: _scrollController,
+                controller: _chipsScrollController,
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 itemCount: genre.length,
@@ -75,7 +120,12 @@ class _BrowsePageState extends State<BrowsePage> {
                   return GestureDetector(
                     key: _chipKeys[index],
                     onTap: () {
-                      setState(() => selectedGenre = item);
+                      setState(() {
+                        selectedGenre = item;
+                        currentPage = 1;
+                        movies.clear();
+                        _loadInitialMovies(); // reload for new genre
+                      });
                       _scrollToSelectedChip(index);
                     },
                     child: Container(
@@ -106,7 +156,8 @@ class _BrowsePageState extends State<BrowsePage> {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 12.w),
                 child: GridView.builder(
-                  itemCount: dummyMovies.length,
+                  controller: _scrollController,
+                  itemCount: movies.length + (isLoadingMore ? 2 : 0),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     crossAxisSpacing: 12.w,
@@ -114,7 +165,20 @@ class _BrowsePageState extends State<BrowsePage> {
                     childAspectRatio: 0.65,
                   ),
                   itemBuilder: (context, index) {
-                    return MoviePosterCard(movie: dummyMovies[index]);
+                    if (index < movies.length) {
+                      return MoviePosterCard(movie: movies[index]);
+                    } else {
+                      return Center(
+                        child: SizedBox(
+                          width: 28.sp,
+                          height: 28.sp,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            color: AppColors.primaryYellowColor,
+                          ),
+                        ),
+                      );
+                    }
                   },
                 ),
               ),
