@@ -58,6 +58,7 @@ dependencies:
   hydrated_bloc: ^10.0.0
   path_provider: ^2.1.5
   photo_view: ^0.14.0
+  pretty_dio_logger: ^1.4.0
 
 dev_dependencies:
   flutter_test:
