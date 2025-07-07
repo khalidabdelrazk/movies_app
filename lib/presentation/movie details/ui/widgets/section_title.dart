@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies/core/theme/app_colors.dart';
+import 'package:movies/core/theme/app_styles.dart';
 
 class SectionTitle extends StatelessWidget {
   final String title;
@@ -13,11 +14,7 @@ class SectionTitle extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Text(
         title,
-        style: TextStyle(
-          color: AppColors.light,
-          fontSize: 18.sp,
-          fontWeight: FontWeight.bold,
-        ),
+        style: AppStyles.lightBold20,
       ),
     );
   }

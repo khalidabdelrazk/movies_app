@@ -8,6 +8,7 @@ import 'package:movies/presentation/home/Domain/Entity/movies_response_entity.da
 import 'package:movies/presentation/movie%20details/Domain/Entity/movie_details_response_entity.dart';
 import 'package:movies/presentation/movie%20details/ui/cubit/movie_details_states.dart';
 import 'package:movies/presentation/movie%20details/ui/cubit/movie_details_view_model.dart';
+import 'package:movies/presentation/movie%20details/ui/widgets/genre_chips.dart';
 import 'package:movies/presentation/movie%20details/ui/widgets/movie_details_app_bar.dart';
 import 'package:movies/presentation/movie%20details/ui/widgets/screenshot_section.dart';
 import 'package:movies/presentation/movie%20details/ui/widgets/similar_movie_section.dart';
@@ -58,9 +59,10 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
                   movie: movie,
                   isFav: state.movieDetailsResponseEntity.isFavourite!,
                   onFavToggle: () async{
-                    state.movieDetailsResponseEntity.isFavourite = !state.movieDetailsResponseEntity.isFavourite!;
-                    await movieDetailsViewModel.addToFav(movie: state.movieDetailsResponseEntity, isFavourite: state.movieDetailsResponseEntity.isFavourite!);
-                    setState(() {});
+                   setState(() {
+                     state.movieDetailsResponseEntity.isFavourite = !state.movieDetailsResponseEntity.isFavourite!;
+                   });
+                   await movieDetailsViewModel.addToFav(movie: state.movieDetailsResponseEntity, isFavourite: state.movieDetailsResponseEntity.isFavourite!);
                   },
                 ),
                 SliverToBoxAdapter(
@@ -91,6 +93,10 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
                       SectionTitle(title: 'Cast'),
                       SizedBox(height: 16.h),
                       CastSection(movieDetailsResponseEntity: movie),
+                      SizedBox(height: 24.h),
+                      SectionTitle(title: "Genre"),
+                      SizedBox(height: 16.h),
+                      GenresChips(genres: arg!.genres ?? ["Action"]),
                       SizedBox(height: 24.h),
                     ],
                   ),
