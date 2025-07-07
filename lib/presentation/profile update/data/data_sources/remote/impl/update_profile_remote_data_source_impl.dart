@@ -25,6 +25,11 @@ class UpdateProfileRemoteDataSourceImpl
 
     try {
       if (connectivityResult.contains(ConnectivityResult.wifi) ||
+          connectivityResult.contains(ConnectivityResult.ethernet) ||
+          connectivityResult.contains(ConnectivityResult.vpn) ||
+          connectivityResult.contains(ConnectivityResult.bluetooth) ||
+          connectivityResult.contains(ConnectivityResult.other) ||
+          !connectivityResult.contains(ConnectivityResult.none) ||
           connectivityResult.contains(ConnectivityResult.mobile)) {
         final token = SharedPrefService.instance.getToken();
 

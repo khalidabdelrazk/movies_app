@@ -84,8 +84,7 @@ class _ProfilePageState extends State<ProfilePage> {
           } else if (state is ProfileSuccessState) {
             final user = state.getProfileResponseEntity.data;
             return Scaffold(
-              body: SafeArea(
-                child: Column(
+              body: Column(
                   children: [
                     Container(
                       width: double.infinity,
@@ -286,7 +285,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                   ],
                 ),
-              ),
+            
             );
           } else {
             return Container();
