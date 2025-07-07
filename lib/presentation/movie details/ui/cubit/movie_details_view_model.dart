@@ -1,6 +1,7 @@
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:movies/presentation/movie%20details/Domain/Entity/movie_details_response_entity.dart';
+import 'package:movies/presentation/movie%20details/Domain/Use%20Case/add_fav_use_case.dart';
 import 'package:movies/presentation/movie%20details/Domain/Use%20Case/movie_details_use_case.dart';
 import 'package:movies/presentation/movie%20details/Domain/Use%20Case/movie_suggestion_use_case.dart';
 import 'package:movies/presentation/movie%20details/ui/cubit/movie_details_states.dart';
@@ -9,9 +10,10 @@ import 'package:movies/presentation/movie%20details/ui/cubit/movie_details_state
 class MovieDetailsViewModel extends HydratedCubit<MovieDetailsStates> {
   final MovieDetailsUseCase movieDetailsUseCase;
   final MovieSuggestionUseCase movieSuggestionUseCase;
+  final AddFavUseCase addFavUseCase;
 
 
-  MovieDetailsViewModel(this.movieSuggestionUseCase, {required this.movieDetailsUseCase})
+  MovieDetailsViewModel(this.movieSuggestionUseCase, this.addFavUseCase, {required this.movieDetailsUseCase})
       : super(MovieDetailsInitState());
 
   void getMovieDetails({required String imdbId, required bool isFavourite, required num movieId}) async {
@@ -36,6 +38,11 @@ class MovieDetailsViewModel extends HydratedCubit<MovieDetailsStates> {
       (response) =>
           emit(MovieSuggestionSuccessState(movieSuggestionResponseEntity: response)),
     );
+  }
+
+
+  void addToFav({required MovieDetailsResponseEntity movie, required bool isFavourite}) async {
+    await addFavUseCase.invoke(movie, isFavourite);
   }
 
   @override

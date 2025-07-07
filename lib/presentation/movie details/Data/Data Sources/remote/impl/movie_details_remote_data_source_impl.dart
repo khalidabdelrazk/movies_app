@@ -4,10 +4,10 @@ import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
 import 'package:movies/core/model/failures.dart';
 import 'package:movies/core/utils/shared_pref_services.dart';
+import 'package:movies/presentation/movie%20details/Data/Models/add_fav_response_dm.dart';
 import 'package:movies/presentation/movie%20details/Data/Models/movie_details_response_dm.dart';
 import 'package:movies/presentation/movie%20details/Data/Models/movie_suggestion_response_dm.dart';
 import 'package:movies/presentation/movie%20details/Domain/Entity/movie_details_response_entity.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../../core/api manager/api_endpoints.dart';
 import '../../../../../../core/api manager/api_manager.dart';
 import '../movie_details_remote_data_source.dart';
@@ -120,6 +120,118 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
       return Left(ServerError(errorMessage: e.toString()));
     }
   }
+
+  @override
+  Future<Either<Failures, AddFavResponseDm>> addToFav(MovieDetailsResponseEntity movie, bool isFavourite) async{
+    if(isFavourite){
+      return _addToFav(movie);
+    }else{
+      return _removeFav(movie);
+    }
+  }
+
+  Future<Either<Failures, AddFavResponseDm>> _addToFav(MovieDetailsResponseEntity movie) async{
+    final List<ConnectivityResult> connectivityResult =
+    await Connectivity().checkConnectivity();
+    try {
+      if (connectivityResult.contains(ConnectivityResult.wifi) ||
+          connectivityResult.contains(ConnectivityResult.ethernet) ||
+          connectivityResult.contains(ConnectivityResult.vpn) ||
+          connectivityResult.contains(ConnectivityResult.bluetooth) ||
+          connectivityResult.contains(ConnectivityResult.other) ||
+          !connectivityResult.contains(ConnectivityResult.none) ||
+          connectivityResult.contains(ConnectivityResult.mobile)) {
+        MovieMovieDetails movieMovieDetails = movie.data!.movie!;
+        SharedPrefService sharedPrefService = SharedPrefService.instance;
+        String token = sharedPrefService.getToken() ?? "0";
+          var response = await apiManager.postData(
+            path: ApiEndpoints.addToFavorites,
+            queryParameters: {
+              "movieId": movieMovieDetails.id,
+              "name": movieMovieDetails.title,
+              "rating": movieMovieDetails.rating,
+              "imageURL": movieMovieDetails.largeCoverImage,
+              "year": movieMovieDetails.year
+            },
+            options: Options(
+              validateStatus: (status) => true,
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer $token',
+              },
+            ),
+          );
+
+
+        AddFavResponseDm movieSuggestionResponseDm =
+        AddFavResponseDm.fromJson(
+          response.data,
+        );
+        // print("RESPONSE BODY: ${response.data}");
+        // print("STATUS CODE: ${response.statusCode}");
+        if (response.statusCode! >= 200 && response.statusCode! < 300) {
+          return Right(movieSuggestionResponseDm);
+        }
+        return Left(
+            ServerError(errorMessage: movieSuggestionResponseDm.message!));
+      } else {
+        return Left(NetworkError(errorMessage: "Network Error"));
+      }
+    } catch (e) {
+      // rethrow;
+      print('Hello');
+      return Left(ServerError(errorMessage: e.toString()));
+    }
+  }
+
+  Future<Either<Failures, AddFavResponseDm>> _removeFav(MovieDetailsResponseEntity movie) async{
+    final List<ConnectivityResult> connectivityResult =
+    await Connectivity().checkConnectivity();
+    try {
+      if (connectivityResult.contains(ConnectivityResult.wifi) ||
+          connectivityResult.contains(ConnectivityResult.ethernet) ||
+          connectivityResult.contains(ConnectivityResult.vpn) ||
+          connectivityResult.contains(ConnectivityResult.bluetooth) ||
+          connectivityResult.contains(ConnectivityResult.other) ||
+          !connectivityResult.contains(ConnectivityResult.none) ||
+          connectivityResult.contains(ConnectivityResult.mobile)) {
+        MovieMovieDetails movieMovieDetails = movie.data!.movie!;
+        SharedPrefService sharedPrefService = SharedPrefService.instance;
+        String token = sharedPrefService.getToken() ?? "0";
+
+
+         var response = await apiManager.deleteData(
+            path: ApiEndpoints.removeFavorite(movieMovieDetails.id!),
+            options: Options(
+              validateStatus: (status) => true,
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer $token',
+              },
+            ),
+          );
+
+
+        AddFavResponseDm movieSuggestionResponseDm =
+        AddFavResponseDm.fromJson(
+          response.data,
+        );
+        if (response.statusCode! >= 200 && response.statusCode! < 300) {
+          return Right(movieSuggestionResponseDm);
+        }
+        return Left(
+            ServerError(errorMessage: movieSuggestionResponseDm.message!));
+      } else {
+        return Left(NetworkError(errorMessage: "Network Error"));
+      }
+    } catch (e) {
+      // rethrow;
+      print('Hello');
+      return Left(ServerError(errorMessage: e.toString()));
+    }
+  }
+
+
 }
 
 /*

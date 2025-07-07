@@ -36,7 +36,7 @@ class ApiEndpoints {
   // Favorites
   static const String getAllFavorites = "$authBaseUrl/favorites/all";
   static const String addToFavorites = "$authBaseUrl/favorites/add";
-  static String removeFavorite(String movieId) =>
+  static String removeFavorite(num movieId) =>
       "$authBaseUrl/favorites/remove/$movieId";
   static String isFavorite(num movieId) =>
       "$authBaseUrl/favorites/is-favorite/$movieId";
