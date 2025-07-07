@@ -16,54 +16,56 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
   MovieDetailsRemoteDataSourceImpl({required this.apiManager});
 
   @override
+  @override
   Future<Either<Failures, MovieDetailsResponseEntity>> getMovieDetails(
       String imdbId, bool isFavourite, num movieId) async {
     final List<ConnectivityResult> connectivityResult =
         await Connectivity().checkConnectivity();
     try {
-      if (connectivityResult.contains(ConnectivityResult.wifi) ||
-          connectivityResult.contains(ConnectivityResult.ethernet) ||
-          connectivityResult.contains(ConnectivityResult.vpn) ||
-          connectivityResult.contains(ConnectivityResult.bluetooth) ||
-          connectivityResult.contains(ConnectivityResult.other) ||
-          !connectivityResult.contains(ConnectivityResult.none) ||
-          connectivityResult.contains(ConnectivityResult.mobile)) {
-        var response = await apiManager.getData(
+      if (!connectivityResult.contains(ConnectivityResult.none)) {
+        // Get movie details
+        final response = await apiManager.getData(
           path: ApiEndpoints.movieDetails,
           queryParameters: {
             "imdb_id": imdbId,
             "with_cast": true,
-            "with_images": true
+            "with_images": true,
           },
           options: Options(
             validateStatus: (status) => true,
           ),
         );
 
-        var isLiked = await apiManager.getData(
+        // Get favorite status
+        final isLiked = await apiManager.getData(
           path: ApiEndpoints.isFavorite(movieId),
           options: Options(
             validateStatus: (status) => true,
           ),
         );
 
-        MovieDetailsResponseDm movieDetailsResponseDm =
-            MovieDetailsResponseDm.fromJson(
+        final movieDetailsResponseDm = MovieDetailsResponseDm.fromJson(
           response.data,
         );
-        print("RESPONSE BODY: ${response.data}");
-        print("STATUS CODE: ${response.statusCode}");
+        print(" RESPONSE BODY: ${isLiked.data}");
+
+        // print("RESPONSE BODY: ${response.data}");
+        // print("STATUS CODE: ${response.statusCode}");
+
         if (response.statusCode! >= 200 && response.statusCode! < 300) {
-          isFavourite = isLiked.data["data"];
+          // ✅ Inject the isFavourite manually into the entity model (if supported)
+          movieDetailsResponseDm.isFavourite = isLiked.data["data"];
           return Right(movieDetailsResponseDm);
         }
-        return Left(ServerError(errorMessage: movieDetailsResponseDm.message!));
+
+        return Left(ServerError(
+          errorMessage: movieDetailsResponseDm.message ?? "Unknown error",
+        ));
       } else {
         return Left(NetworkError(errorMessage: "Network Error"));
       }
     } catch (e) {
-      // rethrow;
-      print('Hello');
+      print('Error in getMovieDetails: $e');
       return Left(ServerError(errorMessage: e.toString()));
     }
   }

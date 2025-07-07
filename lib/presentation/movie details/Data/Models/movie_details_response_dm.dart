@@ -6,6 +6,8 @@ class MovieDetailsResponseDm extends MovieDetailsResponseEntity{
       super.statusMessage,
       super.data,
       this.message,
+      super.isFavourite,
+
       super.meta,});
 
   MovieDetailsResponseDm.fromJson(dynamic json) {

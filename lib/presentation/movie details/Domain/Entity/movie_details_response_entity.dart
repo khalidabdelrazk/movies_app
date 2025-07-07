@@ -5,6 +5,7 @@ class MovieDetailsResponseEntity {
       this.status, 
       this.statusMessage, 
       this.data, 
+      this.isFavourite,
       this.meta,});
 
   MovieDetailsResponseEntity.fromJson(dynamic json) {
@@ -17,6 +18,8 @@ class MovieDetailsResponseEntity {
   String? statusMessage;
   DataMovieDetails? data;
   MetaMovieDetails? meta;
+
+  bool? isFavourite;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

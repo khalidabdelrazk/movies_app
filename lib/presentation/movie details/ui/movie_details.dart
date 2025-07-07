@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies/core/di/di.dart';
 import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/core/utils/network_error_widget.dart';
+import 'package:movies/presentation/home/Domain/Entity/movies_response_entity.dart';
 import 'package:movies/presentation/movie%20details/Domain/Entity/movie_details_response_entity.dart';
 import 'package:movies/presentation/movie%20details/ui/cubit/movie_details_states.dart';
 import 'package:movies/presentation/movie%20details/ui/cubit/movie_details_view_model.dart';
@@ -27,15 +28,15 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
   final MovieDetailsViewModel movieDetailsViewModel =
       getIt<MovieDetailsViewModel>();
   bool isFavourite = false;
-  String? imdbId;
+  MoviesEntity? arg;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    imdbId ??= ModalRoute.of(context)?.settings.arguments as String?;
+    arg ??= ModalRoute.of(context)?.settings.arguments as MoviesEntity?;
 
-    if (imdbId != null) {
-      movieDetailsViewModel.getMovieDetails(imdbId: imdbId!,isFavourite: isFavourite,movieId: movie.data?.movie?.id ?? 0);
+    if (arg != null) {
+      movieDetailsViewModel.getMovieDetails(imdbId: arg?.imdbCode?.toString() ?? "0",isFavourite: isFavourite,movieId: arg?.id ?? 0);
     }
   }
 

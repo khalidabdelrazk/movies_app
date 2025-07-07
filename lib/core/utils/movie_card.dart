@@ -25,7 +25,7 @@ class MoviePosterCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
           Navigator.of(context)
-              .pushNamed(RouteNames.movieDetails, arguments: movie.imdbCode);
+              .pushNamed(RouteNames.movieDetails, arguments: movie);
       },
       child: Container(
         width: width ?? 198.sp,
