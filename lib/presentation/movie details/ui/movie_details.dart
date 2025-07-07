@@ -61,6 +61,11 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
                   onFavToggle: () async{
                    setState(() {
                      state.movieDetailsResponseEntity.isFavourite = !state.movieDetailsResponseEntity.isFavourite!;
+                     if(state.movieDetailsResponseEntity.isFavourite!){
+                       state.movieDetailsResponseEntity.data?.movie?.likeCount = (state.movieDetailsResponseEntity.data?.movie?.likeCount?? 0) + 1;
+                     }else{
+                       state.movieDetailsResponseEntity.data?.movie?.likeCount = (state.movieDetailsResponseEntity.data?.movie?.likeCount?? 0) - 1;
+                     }
                    });
                    await movieDetailsViewModel.addToFav(movie: state.movieDetailsResponseEntity, isFavourite: state.movieDetailsResponseEntity.isFavourite!);
                   },
