@@ -7,9 +7,7 @@ import 'package:movies/core/api%20manager/api_manager.dart';
 import 'package:movies/core/utils/shared_pref_services.dart';
 import 'package:movies/core/model/failures.dart';
 import 'package:movies/presentation/profile%20update/data/data_sources/remote/reset_password_remote_data_source.dart';
-import 'package:movies/presentation/profile%20update/data/data_sources/remote/update_profile_remote_data_source.dart';
 import 'package:movies/presentation/profile%20update/data/models/ResetPasswordDm.dart';
-import 'package:movies/presentation/profile%20update/data/models/UpdateResponseDm.dart';
 
 @Injectable(as: ResetPasswordRemoteDataSource)
 class ResetPasswordRemoteDataSourceImpl

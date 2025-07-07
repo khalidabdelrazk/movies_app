@@ -1,7 +1,5 @@
 import '../../../home/Domain/Entity/movies_response_entity.dart';
 
-import '../../../home/Domain/Entity/movies_response_entity.dart';
-
 class ExploreResponseEntity extends MoviesResponseEntity {
   ExploreResponseEntity({
     super.status,

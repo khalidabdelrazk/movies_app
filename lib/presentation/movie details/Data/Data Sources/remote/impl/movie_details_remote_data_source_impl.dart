@@ -180,7 +180,7 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
         return Left(NetworkError(errorMessage: "Network Error"));
       }
     } catch (e) {
-      rethrow;
+      // rethrow;
       print('Hello');
       return Left(ServerError(errorMessage: e.toString()));
     }

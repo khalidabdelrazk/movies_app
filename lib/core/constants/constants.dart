@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../presentation/browse/ui/browse_page.dart';
-import '../../presentation/home/ui/home_page.dart' hide SearchPage;
+import '../../presentation/home/ui/home_page.dart';
 import '../../presentation/profile/ui/profile_page.dart';
 import '../../presentation/search/ui/cubit/search_view_model.dart';
 import '../../presentation/search/ui/search_page.dart';

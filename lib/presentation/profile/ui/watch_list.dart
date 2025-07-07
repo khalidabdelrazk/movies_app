@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:movies/core/model/failures.dart';
 import 'package:movies/presentation/home/Domain/Entity/movies_response_entity.dart';
 import 'package:movies/presentation/profile/ui/cubit/profile_page_states.dart';
 

@@ -1,4 +1,3 @@
-import '../../../home/Domain/Entity/movies_response_entity.dart';
 import '../../Domain/Entity/explore_response_entity.dart';
 
 class ExploreResponseDm extends ExploreResponseEntity{

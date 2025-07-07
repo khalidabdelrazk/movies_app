@@ -1,7 +1,6 @@
 import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
 import 'package:movies/core/model/failures.dart';
-import 'package:movies/presentation/authentication/ui/screens/reset_password.dart';
 import 'package:movies/presentation/profile%20update/domain/entitys/ResetPasswordEntity.dart';
 import 'package:movies/presentation/profile%20update/domain/repository/reset_password_repository.dart';
 
