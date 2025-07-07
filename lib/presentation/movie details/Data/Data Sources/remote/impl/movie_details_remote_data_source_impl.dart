@@ -73,7 +73,6 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
         return Left(NetworkError(errorMessage: "Network Error"));
       }
     } catch (e) {
-      print('Error in getMovieDetails: $e');
       return Left(ServerError(errorMessage: e.toString()));
     }
   }
@@ -116,7 +115,6 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
       }
     } catch (e) {
       // rethrow;
-      print('Hello');
       return Left(ServerError(errorMessage: e.toString()));
     }
   }
@@ -142,7 +140,6 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
           !connectivityResult.contains(ConnectivityResult.none) ||
           connectivityResult.contains(ConnectivityResult.mobile)) {
         MovieMovieDetails movieMovieDetails = movie.data!.movie!;
-        print('Sending to favorites: ${movieMovieDetails.id}, ${movieMovieDetails.title}, ${movieMovieDetails.rating}, ${movieMovieDetails.largeCoverImage}, ${movieMovieDetails.year}');
 
         SharedPrefService sharedPrefService = SharedPrefService.instance;
         String token = sharedPrefService.getToken() ?? "0";
@@ -169,8 +166,6 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
         AddFavResponseDm.fromJson(
           response.data,
         );
-        print("RESPONSE BODY: ${response.data}");
-        print("STATUS CODE: ${response.statusCode}");
         if (response.statusCode! >= 200 && response.statusCode! < 300) {
           return Right(movieSuggestionResponseDm);
         }
@@ -181,7 +176,6 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
       }
     } catch (e) {
       // rethrow;
-      print('Hello');
       return Left(ServerError(errorMessage: e.toString()));
     }
   }
@@ -213,7 +207,6 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
             ),
           );
 
-        print("Success Removed ${movie.data?.movie?.id}");
         AddFavResponseDm movieSuggestionResponseDm =
         AddFavResponseDm.fromJson(
           response.data,
@@ -228,7 +221,6 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
       }
     } catch (e) {
       // rethrow;
-      print('Hello');
       return Left(ServerError(errorMessage: e.toString()));
     }
   }

@@ -7,7 +7,7 @@ import 'package:movies/core/api%20manager/api_manager.dart';
 import 'package:movies/core/utils/shared_pref_services.dart';
 import 'package:movies/core/model/failures.dart';
 import 'package:movies/presentation/profile%20update/data/data_sources/remote/delete_profile_remote_data_source.dart';
-import 'package:movies/presentation/profile%20update/data/models/DeleteResponseDm.dart';
+import 'package:movies/presentation/profile%20update/data/models/delete_response_dm.dart';
 
 @Injectable(as: DeleteProfileRemoteDataSource)
 class DeleteProfileRemoteDataSourceImpl
@@ -45,9 +45,6 @@ class DeleteProfileRemoteDataSourceImpl
           ),
         );
 
-        print("RESPONSE Profile BODY: ${response.data}");
-        print("STATUS Profile CODE: ${response.statusCode}");
-
         final DeleteResponseDm profileResponse =
             DeleteResponseDm.fromJson(response.data);
 
@@ -61,7 +58,6 @@ class DeleteProfileRemoteDataSourceImpl
         return Left(NetworkError(errorMessage: "No Internet Connection"));
       }
     } catch (e) {
-      print("ERROR: $e");
       return Left(ServerError(errorMessage: e.toString()));
     }
   }

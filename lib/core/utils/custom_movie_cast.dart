@@ -4,7 +4,7 @@ import 'package:movies/core/assets/app_assets.dart';
 import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/core/theme/app_styles.dart';
 
-Widget CustomMovieCast({required String name,required String character}) {
+Widget customMovieCast({required String name,required String character}) {
   return Container(
     padding: EdgeInsets.all(10.r),
     decoration: BoxDecoration(

@@ -24,8 +24,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       String? rePassword,
       String? phone,
       int? avatarId) async {
-    print(
-        'name: $name,email: $email,password: $password,rePassword: $rePassword,phone: $phone,avaterId: $avatarId');
     final List<ConnectivityResult> connectivityResult =
         await Connectivity().checkConnectivity();
     try {
@@ -54,8 +52,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         RegisterResponseDm registerResponse = RegisterResponseDm.fromJson(
           response.data,
         );
-        print("RESPONSE BODY: ${response.data}");
-        print("STATUS CODE: ${response.statusCode}");
         if (response.statusCode! >= 200 && response.statusCode! < 300) {
           return Right(registerResponse);
         }
@@ -64,7 +60,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         return Left(NetworkError(errorMessage: "Network Error"));
       }
     } catch (e) {
-      print('Hello');
       return Left(ServerError(errorMessage: e.toString()));
     }
   }
@@ -72,7 +67,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<Either<Failures, LoginResponseEntity>> login(
       String? email, String? password) async {
-    print('email: $email,password: $password,');
     final List<ConnectivityResult> connectivityResult =
         await Connectivity().checkConnectivity();
     try {
@@ -97,8 +91,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         LoginResponseDm loginResponseDm = LoginResponseDm.fromJson(
           response.data,
         );
-        print("RESPONSE BODY: ${response.data}");
-        print("STATUS CODE: ${response.statusCode}");
         if (response.statusCode! >= 200 && response.statusCode! < 300) {
           return Right(loginResponseDm);
         }
@@ -108,7 +100,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         return Left(NetworkError(errorMessage: "Network Error"));
       }
     } catch (e) {
-      print('Hello');
       return Left(ServerError(errorMessage: e.toString()));
     }
   }

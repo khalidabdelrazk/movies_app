@@ -1,4 +1,4 @@
-import 'package:movies/presentation/profile%20update/domain/entitys/DeleteResponseEntity.dart';
+import 'package:movies/presentation/profile%20update/domain/entitys/delete_response_entity.dart';
 
 class DeleteResponseDm extends DeleteResponseEntity {
   DeleteResponseDm({

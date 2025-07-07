@@ -7,7 +7,7 @@ import 'package:movies/core/api%20manager/api_manager.dart';
 import 'package:movies/core/utils/shared_pref_services.dart';
 import 'package:movies/core/model/failures.dart';
 import 'package:movies/presentation/profile%20update/data/data_sources/remote/reset_password_remote_data_source.dart';
-import 'package:movies/presentation/profile%20update/data/models/ResetPasswordDm.dart';
+import 'package:movies/presentation/profile%20update/data/models/reset_response_dm.dart';
 
 @Injectable(as: ResetPasswordRemoteDataSource)
 class ResetPasswordRemoteDataSourceImpl
@@ -49,10 +49,6 @@ class ResetPasswordRemoteDataSourceImpl
             "newPassword": newPassword,
           },
         );
-
-        print("RESPONSE Profile BODY: ${response.data}");
-        print("STATUS Profile CODE: ${response.statusCode}");
-
         final ResetPasswordDm profileResponse =
             ResetPasswordDm.fromJson(response.data);
 
@@ -66,7 +62,6 @@ class ResetPasswordRemoteDataSourceImpl
         return Left(NetworkError(errorMessage: "No Internet Connection"));
       }
     } catch (e) {
-      print("ERROR: $e");
       return Left(ServerError(errorMessage: e.toString()));
     }
   }

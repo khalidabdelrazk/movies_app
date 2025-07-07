@@ -7,7 +7,7 @@ import 'package:movies/core/api%20manager/api_manager.dart';
 import 'package:movies/core/utils/shared_pref_services.dart';
 import 'package:movies/core/model/failures.dart';
 import 'package:movies/presentation/profile%20update/data/data_sources/remote/update_profile_remote_data_source.dart';
-import 'package:movies/presentation/profile%20update/data/models/UpdateResponseDm.dart';
+import 'package:movies/presentation/profile%20update/data/models/update_response_dm.dart';
 
 @Injectable(as: UpdateProfileRemoteDataSource)
 class UpdateProfileRemoteDataSourceImpl
@@ -53,9 +53,6 @@ class UpdateProfileRemoteDataSourceImpl
           },
         );
 
-        print("RESPONSE Profile BODY: ${response.data}");
-        print("STATUS Profile CODE: ${response.statusCode}");
-
         final UpdateResponseDm profileResponse =
             UpdateResponseDm.fromJson(response.data);
 
@@ -69,7 +66,6 @@ class UpdateProfileRemoteDataSourceImpl
         return Left(NetworkError(errorMessage: "No Internet Connection"));
       }
     } catch (e) {
-      print("ERROR: $e");
       return Left(ServerError(errorMessage: e.toString()));
     }
   }

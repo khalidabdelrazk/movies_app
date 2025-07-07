@@ -1,6 +1,6 @@
 import 'package:either_dart/either.dart';
 import 'package:movies/core/model/failures.dart';
-import 'package:movies/presentation/profile%20update/domain/entitys/ResetPasswordEntity.dart';
+import 'package:movies/presentation/profile%20update/domain/entitys/reset_password_entity.dart';
 
 abstract class ResetPasswordRemoteDataSource {
   Future<Either<Failures, ResetPasswordEntity>> reset(

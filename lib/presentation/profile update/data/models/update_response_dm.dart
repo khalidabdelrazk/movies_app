@@ -1,4 +1,4 @@
-import 'package:movies/presentation/profile%20update/domain/entitys/UpdateProfileResponseEnity.dart';
+import 'package:movies/presentation/profile%20update/domain/entitys/update_profile_response_entity.dart';
 
 class UpdateResponseDm extends UpdateProfileResponseEntity {
   UpdateResponseDm({
