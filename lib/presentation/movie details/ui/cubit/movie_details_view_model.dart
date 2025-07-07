@@ -14,10 +14,10 @@ class MovieDetailsViewModel extends HydratedCubit<MovieDetailsStates> {
   MovieDetailsViewModel(this.movieSuggestionUseCase, {required this.movieDetailsUseCase})
       : super(MovieDetailsInitState());
 
-  void getMovieDetails({required String imdbId}) async {
+  void getMovieDetails({required String imdbId, required bool isFavourite, required num movieId}) async {
     emit(MovieDetailsLoadingState());
 
-    final result = await movieDetailsUseCase.invoke(imdbId);
+    final result = await movieDetailsUseCase.invoke(imdbId, isFavourite, movieId);
 
     result.fold(
       (failure) => emit(MovieDetailsErrorState(errMsg: failure.errorMessage)),

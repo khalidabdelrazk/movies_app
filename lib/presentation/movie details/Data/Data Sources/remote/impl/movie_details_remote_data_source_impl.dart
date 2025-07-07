@@ -17,7 +17,7 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
 
   @override
   Future<Either<Failures, MovieDetailsResponseEntity>> getMovieDetails(
-      String imdbId) async {
+      String imdbId, bool isFavourite, num movieId) async {
     final List<ConnectivityResult> connectivityResult =
         await Connectivity().checkConnectivity();
     try {
@@ -31,14 +31,22 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
         var response = await apiManager.getData(
           path: ApiEndpoints.movieDetails,
           queryParameters: {
-            "imdb_id" : imdbId,
-            "with_cast" : true,
-            "with_images" : true
+            "imdb_id": imdbId,
+            "with_cast": true,
+            "with_images": true
           },
           options: Options(
             validateStatus: (status) => true,
           ),
         );
+
+        var isLiked = await apiManager.getData(
+          path: ApiEndpoints.isFavorite(movieId),
+          options: Options(
+            validateStatus: (status) => true,
+          ),
+        );
+
         MovieDetailsResponseDm movieDetailsResponseDm =
             MovieDetailsResponseDm.fromJson(
           response.data,
@@ -46,6 +54,7 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
         print("RESPONSE BODY: ${response.data}");
         print("STATUS CODE: ${response.statusCode}");
         if (response.statusCode! >= 200 && response.statusCode! < 300) {
+          isFavourite = isLiked.data["data"];
           return Right(movieDetailsResponseDm);
         }
         return Left(ServerError(errorMessage: movieDetailsResponseDm.message!));
@@ -60,8 +69,9 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
   }
 
   @override
-  Future<Either<Failures, MovieSuggestionResponseDm>> getMovieSuggestion(String movieId) async{
-        final List<ConnectivityResult> connectivityResult =
+  Future<Either<Failures, MovieSuggestionResponseDm>> getMovieSuggestion(
+      String movieId) async {
+    final List<ConnectivityResult> connectivityResult =
         await Connectivity().checkConnectivity();
     try {
       if (connectivityResult.contains(ConnectivityResult.wifi) ||
@@ -74,7 +84,7 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
         var response = await apiManager.getData(
           path: ApiEndpoints.movieSuggestions,
           queryParameters: {
-            "movie_id" : movieId,
+            "movie_id": movieId,
           },
           options: Options(
             validateStatus: (status) => true,
@@ -89,7 +99,8 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
         if (response.statusCode! >= 200 && response.statusCode! < 300) {
           return Right(movieSuggestionResponseDm);
         }
-        return Left(ServerError(errorMessage: movieSuggestionResponseDm.message!));
+        return Left(
+            ServerError(errorMessage: movieSuggestionResponseDm.message!));
       } else {
         return Left(NetworkError(errorMessage: "Network Error"));
       }

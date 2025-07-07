@@ -12,14 +12,15 @@ class MovieDetailsRepositoryImpl extends MovieDetailsRepository {
   MovieDetailsRepositoryImpl({required this.movieDetailsRemoteDataSource});
 
   @override
-  Future<Either<Failures, MovieDetailsResponseEntity>> getMovieDetails(String imdbId) {
-    return movieDetailsRemoteDataSource.getMovieDetails(imdbId);
+  Future<Either<Failures, MovieDetailsResponseEntity>> getMovieDetails(
+      String imdbId, bool isFavourite, num movieId) {
+    return movieDetailsRemoteDataSource.getMovieDetails(
+        imdbId, isFavourite, movieId);
   }
-  
+
   @override
-  Future<Either<Failures, MovieSuggestionResponseEntity>> getMovieSuggestion(String movieId) {
+  Future<Either<Failures, MovieSuggestionResponseEntity>> getMovieSuggestion(
+      String movieId) {
     return movieDetailsRemoteDataSource.getMovieSuggestion(movieId);
   }
-
-
 }

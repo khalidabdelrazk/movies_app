@@ -6,8 +6,15 @@ import 'package:movies/presentation/movie%20details/Domain/Entity/movie_details_
 class MovieDetailsAppBar extends StatefulWidget {
   final MovieDetailsResponseEntity movie;
 
-  const MovieDetailsAppBar({super.key, required this.movie});
+  final bool isFav;
+  final VoidCallback onFavToggle;
 
+  const MovieDetailsAppBar({
+    super.key,
+    required this.movie,
+    required this.isFav,
+    required this.onFavToggle,
+  });
   @override
   State<MovieDetailsAppBar> createState() => _MovieDetailsAppBarState();
 }
@@ -68,6 +75,20 @@ class _MovieDetailsAppBarState extends State<MovieDetailsAppBar> {
                 ),
               ),
 
+              // Top Right Favorite Button
+              Positioned(
+                top: 40.h,
+                right: 20.w,
+                child: GestureDetector(
+                  onTap: widget.onFavToggle,
+                  child: Icon(
+                    widget.isFav ? Icons.favorite : Icons.favorite_border,
+                    color: AppColors.primaryYellowColor,
+                    size: 28.r,
+                  ),
+                ),
+              ),
+
               // Center Play Button
               if (!isCollapsed)
                 Center(
@@ -91,8 +112,7 @@ class _MovieDetailsAppBarState extends State<MovieDetailsAppBar> {
                   child: Column(
                     children: [
                       Text(
-                        widget.movie.data?.movie?.title ??
-                            'Unknown Title',
+                        widget.movie.data?.movie?.title ?? 'Unknown Title',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: AppColors.light,

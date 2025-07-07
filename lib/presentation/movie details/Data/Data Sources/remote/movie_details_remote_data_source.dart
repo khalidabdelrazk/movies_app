@@ -5,7 +5,7 @@ import '../../../Domain/Entity/movie_details_response_entity.dart';
 
 abstract class MovieDetailsRemoteDataSource {
   Future<Either<Failures, MovieDetailsResponseEntity>> getMovieDetails(
-      String imdbId);
+      String imdbId, bool isFavourite,  num movieId);
   Future<Either<Failures, MovieSuggestionResponseDm>> getMovieSuggestion(
       String movieId);
 }

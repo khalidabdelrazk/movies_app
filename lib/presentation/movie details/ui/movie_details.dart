@@ -24,8 +24,9 @@ class MovieDetails extends StatefulWidget {
 
 class _MovieDetailsScreenState extends State<MovieDetails> {
   late MovieDetailsResponseEntity movie;
-  final MovieDetailsViewModel movieDetailsViewModel = getIt<MovieDetailsViewModel>();
-
+  final MovieDetailsViewModel movieDetailsViewModel =
+      getIt<MovieDetailsViewModel>();
+  bool isFavourite = false;
   String? imdbId;
 
   @override
@@ -34,7 +35,7 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
     imdbId ??= ModalRoute.of(context)?.settings.arguments as String?;
 
     if (imdbId != null) {
-      movieDetailsViewModel.getMovieDetails(imdbId: imdbId!);
+      movieDetailsViewModel.getMovieDetails(imdbId: imdbId!,isFavourite: isFavourite,movieId: movie.data?.movie?.id ?? 0);
     }
   }
 
@@ -52,7 +53,15 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
             backgroundColor: AppColors.black,
             body: CustomScrollView(
               slivers: [
-                MovieDetailsAppBar(movie: movie),
+                MovieDetailsAppBar(
+                  movie: movie,
+                  isFav: isFavourite,
+                  onFavToggle: () {
+                    setState(() {
+                      isFavourite = !isFavourite;
+                    });
+                  },
+                ),
                 SliverToBoxAdapter(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -67,14 +76,15 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
                       SizedBox(height: 24.h),
                       SectionTitle(title: 'Similar'),
                       SizedBox(height: 16.h),
-                      SimilarMovieSection(imdbId: movie.data?.movie?.id.toString(),),
+                      SimilarMovieSection(
+                        imdbId: movie.data?.movie?.id.toString(),
+                      ),
                       SizedBox(height: 24.h),
                       SectionTitle(title: 'Summary'),
                       SizedBox(height: 2.h),
                       SummarySection(
                         summary: movie.data?.movie?.summary ??
                             "Following the events of Spider-Man No Way Home, Doctor Strange unwittingly casts a forbidden spell that accidentally opens up the multiverse. With help from Wong and Scarlet Witch, Strange confronts various versions of himself as well as teaming up with the young America Chavez while traveling through various realities and working to restore reality as he knows it. Along the way, Strange and his allies realize they must take on a powerful new adversary who seeks to take over the multiverse.—Blazer346",
-
                       ),
                       SizedBox(height: 24.h),
                       SectionTitle(title: 'Cast'),

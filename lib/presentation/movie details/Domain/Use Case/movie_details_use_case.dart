@@ -10,7 +10,9 @@ class MovieDetailsUseCase {
   MovieDetailsUseCase({required this.movieDetailsRepository});
   Future<Either<Failures, MovieDetailsResponseEntity>> invoke(
     String imdbId,
+      bool isFavourite,  num movieId
   ) {
-    return movieDetailsRepository.getMovieDetails(imdbId);
+    return movieDetailsRepository.getMovieDetails(imdbId, isFavourite, movieId);
   }
 }
+
