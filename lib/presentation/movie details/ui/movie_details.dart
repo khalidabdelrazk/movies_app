@@ -59,7 +59,7 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
                   isFav: state.movieDetailsResponseEntity.isFavourite!,
                   onFavToggle: () {
                     setState(() {
-                      isFavourite = !isFavourite;
+                      state.movieDetailsResponseEntity.isFavourite = !state.movieDetailsResponseEntity.isFavourite!;
                     });
                   },
                 ),
