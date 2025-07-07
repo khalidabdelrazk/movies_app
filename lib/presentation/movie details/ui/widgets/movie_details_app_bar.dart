@@ -28,6 +28,7 @@ class _MovieDetailsAppBarState extends State<MovieDetailsAppBar> {
       pinned: false, // ❌ not pinned
       stretch: true,
       expandedHeight: 500.h,
+      automaticallyImplyLeading: false,
       backgroundColor: AppColors.scaffoldBgColor,
       elevation: 0,
       foregroundColor: Colors.transparent,
@@ -77,7 +78,7 @@ class _MovieDetailsAppBarState extends State<MovieDetailsAppBar> {
 
               // Top Right Favorite Button
               Positioned(
-                top: 40.h,
+                top: 70.h,
                 right: 20.w,
                 child: GestureDetector(
                   onTap: widget.onFavToggle,
@@ -90,18 +91,18 @@ class _MovieDetailsAppBarState extends State<MovieDetailsAppBar> {
               ),
 
               // Center Play Button
-              if (!isCollapsed)
-                Center(
-                  child: CircleAvatar(
-                    radius: 36.r,
-                    backgroundColor: AppColors.primaryYellowColor,
-                    child: Icon(
-                      Icons.play_arrow,
-                      color: AppColors.scaffoldBgColor,
-                      size: 40.r,
-                    ),
+              Positioned(
+                top: 70.h,
+                left: 20.w,
+                child: GestureDetector(
+                  onTap: () => Navigator.pop(context),
+                  child: Icon(
+                    Icons.arrow_back_ios_new,
+                    color: AppColors.primaryYellowColor,
+                    size: 28.r,
                   ),
                 ),
+              ),
 
               // Title + Year
               if (!isCollapsed)
