@@ -57,11 +57,10 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
                 MovieDetailsAppBar(
                   movie: movie,
                   isFav: state.movieDetailsResponseEntity.isFavourite!,
-                  onFavToggle: () {
-                    setState(() {
-                      state.movieDetailsResponseEntity.isFavourite = !state.movieDetailsResponseEntity.isFavourite!;
-                      movieDetailsViewModel.addToFav(movie: state.movieDetailsResponseEntity, isFavourite: isFavourite);
-                    });
+                  onFavToggle: () async{
+                    state.movieDetailsResponseEntity.isFavourite = !state.movieDetailsResponseEntity.isFavourite!;
+                    await movieDetailsViewModel.addToFav(movie: state.movieDetailsResponseEntity, isFavourite: state.movieDetailsResponseEntity.isFavourite!);
+                    setState(() {});
                   },
                 ),
                 SliverToBoxAdapter(

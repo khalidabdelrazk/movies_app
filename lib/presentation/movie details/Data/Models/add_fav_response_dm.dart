@@ -1,12 +1,19 @@
 import '../../Domain/Entity/add_fav_response_entity.dart';
 
-class AddFavResponseDm extends AddFavResponseEntity{
-  AddFavResponseDm({
-    super.message,
-    super.data,});
+class AddFavResponseDm extends AddFavResponseEntity {
+  AddFavResponseDm({super.message, super.data});
 
   AddFavResponseDm.fromJson(dynamic json) {
-    message = json['message'];
+    final dynamic rawMessage = json['message'];
+
+    if (rawMessage is String) {
+      message = rawMessage;
+    } else if (rawMessage is List) {
+      message = rawMessage.join('\n');
+    } else {
+      message = "Unexpected error";
+    }
+
     data = json['data'] != null ? DataFavDm.fromJson(json['data']) : null;
   }
 }

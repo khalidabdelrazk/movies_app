@@ -52,6 +52,8 @@ import '../../presentation/movie%20details/Data/Repository/movie_details_reposit
     as _i376;
 import '../../presentation/movie%20details/Domain/Repository/movie_details_repository.dart'
     as _i240;
+import '../../presentation/movie%20details/Domain/Use%20Case/add_fav_use_case.dart'
+    as _i895;
 import '../../presentation/movie%20details/Domain/Use%20Case/movie_details_use_case.dart'
     as _i843;
 import '../../presentation/movie%20details/Domain/Use%20Case/movie_suggestion_use_case.dart'
@@ -114,6 +116,8 @@ extension GetItInjectableX on _i174.GetIt {
         () => _i183.SearchViewModel(searchUseCase: gh<_i586.SearchUseCase>()));
     gh.factory<_i105.AuthUseCase>(
         () => _i105.AuthUseCase(authRepository: gh<_i471.AuthRepository>()));
+    gh.factory<_i895.AddFavUseCase>(() => _i895.AddFavUseCase(
+        movieDetailsRepository: gh<_i240.MovieDetailsRepository>()));
     gh.factory<_i843.MovieDetailsUseCase>(() => _i843.MovieDetailsUseCase(
         movieDetailsRepository: gh<_i240.MovieDetailsRepository>()));
     gh.factory<_i235.MovieSuggestionUseCase>(() => _i235.MovieSuggestionUseCase(
@@ -122,6 +126,7 @@ extension GetItInjectableX on _i174.GetIt {
         _i679.ExploreUseCase(exploreRepository: gh<_i433.ExploreRepository>()));
     gh.factory<_i755.MovieDetailsViewModel>(() => _i755.MovieDetailsViewModel(
           gh<_i235.MovieSuggestionUseCase>(),
+          gh<_i895.AddFavUseCase>(),
           movieDetailsUseCase: gh<_i843.MovieDetailsUseCase>(),
         ));
     gh.factory<_i46.HomeViewModel>(

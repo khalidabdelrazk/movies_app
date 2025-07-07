@@ -41,7 +41,7 @@ class MovieDetailsViewModel extends HydratedCubit<MovieDetailsStates> {
   }
 
 
-  void addToFav({required MovieDetailsResponseEntity movie, required bool isFavourite}) async {
+  Future<void> addToFav({required MovieDetailsResponseEntity movie, required bool isFavourite}) async {
     await addFavUseCase.invoke(movie, isFavourite);
   }
 
