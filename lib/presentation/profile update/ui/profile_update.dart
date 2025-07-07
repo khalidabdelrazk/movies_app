@@ -99,15 +99,12 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
                       _showAvtarBottomSheet(
                         viewModel.avtarsList,
                       );
-                      print("selectedAvatar: $selectedAvatarIndex");
                     },
-                    child: Container(
-                      child: Image.asset(
-                        viewModel.avtarsList[selectedAvatarIndex],
-                        width: 150.w,
-                        height: 150.h,
-                        fit: BoxFit.cover,
-                      ),
+                    child: Image.asset(
+                      viewModel.avtarsList[selectedAvatarIndex],
+                      width: 150.w,
+                      height: 150.h,
+                      fit: BoxFit.cover,
                     ),
                   ),
                   SizedBox(height: 24.h),
@@ -306,7 +303,6 @@ class _ProfileUpdateState extends State<ProfileUpdate> {
       setState(() {
         selectedAvatarIndex = selectedIndex;
         viewModel.selectedAvatar = selectedIndex + 1;
-        print("selectedAvatar: $selectedAvatarIndex");
       });
     }
   }

@@ -45,10 +45,6 @@ class GetWishlistRemoteDataSourceImpl implements GetWishlistRemoteDataSource {
             validateStatus: (status) => true,
           ),
         );
-
-        print("RESPONSE wishlist BODY: ${response.data}");
-        print("STATUS wishlist CODE: ${response.statusCode}");
-
         final WishlistDm wishlistDm =
         WishlistDm.fromJson(response.data);
 
@@ -62,7 +58,6 @@ class GetWishlistRemoteDataSourceImpl implements GetWishlistRemoteDataSource {
         return Left(NetworkError(errorMessage: "No Internet Connection"));
       }
     } catch (e) {
-      print("ERROR: $e");
       return Left(ServerError(errorMessage: e.toString()));
     }
   }

@@ -197,33 +197,31 @@ class _ProfilePageState extends State<ProfilePage> {
                                       selectedIndex = 1;
                                     });
                                   },
-                                  child: Container(
-                                    child: Column(
-                                      children: [
-                                        SizedBox(
-                                          width: 40.h,
+                                  child: Column(
+                                    children: [
+                                      SizedBox(
+                                        width: 40.h,
+                                        height: 40.h,
+                                        child: SvgPicture.asset(
+                                          AppAssets.watchlist,
                                           height: 40.h,
-                                          child: SvgPicture.asset(
-                                            AppAssets.watchlist,
-                                            height: 40.h,
-                                            width: 40.w,
-                                          ),
+                                          width: 40.w,
                                         ),
-                                        SizedBox(height: 8.h),
-                                        Text(
-                                          "Wish List",
-                                          style: AppStyles.lightRegular20,
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(top: 10.h),
-                                          height: 3.h,
-                                          width: double.infinity,
-                                          color: selectedIndex == 1
-                                              ? AppColors.primaryYellowColor
-                                              : AppColors.transparent,
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                      SizedBox(height: 8.h),
+                                      Text(
+                                        "Wish List",
+                                        style: AppStyles.lightRegular20,
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(top: 10.h),
+                                        height: 3.h,
+                                        width: double.infinity,
+                                        color: selectedIndex == 1
+                                            ? AppColors.primaryYellowColor
+                                            : AppColors.transparent,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
@@ -235,29 +233,27 @@ class _ProfilePageState extends State<ProfilePage> {
                                       selectedIndex = 2;
                                     });
                                   },
-                                  child: Container(
-                                    child: Column(
-                                      children: [
-                                        SvgPicture.asset(
-                                          AppAssets.folder,
-                                          height: 40.h,
-                                          width: 40.w,
-                                        ),
-                                        SizedBox(height: 8.h),
-                                        Text(
-                                          "History",
-                                          style: AppStyles.lightRegular20,
-                                        ),
-                                        Container(
-                                          margin: EdgeInsets.only(top: 10.h),
-                                          height: 3.h,
-                                          width: double.infinity,
-                                          color: selectedIndex == 2
-                                              ? AppColors.primaryYellowColor
-                                              : AppColors.transparent,
-                                        ),
-                                      ],
-                                    ),
+                                  child: Column(
+                                    children: [
+                                      SvgPicture.asset(
+                                        AppAssets.folder,
+                                        height: 40.h,
+                                        width: 40.w,
+                                      ),
+                                      SizedBox(height: 8.h),
+                                      Text(
+                                        "History",
+                                        style: AppStyles.lightRegular20,
+                                      ),
+                                      Container(
+                                        margin: EdgeInsets.only(top: 10.h),
+                                        height: 3.h,
+                                        width: double.infinity,
+                                        color: selectedIndex == 2
+                                            ? AppColors.primaryYellowColor
+                                            : AppColors.transparent,
+                                      ),
+                                    ],
                                   ),
                                 ),
                               )

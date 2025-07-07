@@ -51,10 +51,13 @@ class GetDataDm extends GetDataEntity {
   }
 
   @override
+  // ignore: overridden_fields
   String? createdAt;
   @override
+  // ignore: overridden_fields
   String? updatedAt;
   @override
+  // ignore: overridden_fields
   int? v;
 
   @override

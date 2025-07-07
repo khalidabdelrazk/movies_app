@@ -7,7 +7,7 @@ import 'package:movies/core/api%20manager/api_manager.dart';
 import 'package:movies/core/utils/shared_pref_services.dart';
 import 'package:movies/core/model/failures.dart';
 import 'package:movies/presentation/profile/Data/Data%20Sources/remote/get_profile_remote_data_source.dart';
-import 'package:movies/presentation/profile/Data/Models/GetProfileResponseDm.dart';
+import 'package:movies/presentation/profile/Data/Models/get_profile_response_dm.dart';
 
 @Injectable(as: GetProfileRemoteDataSource)
 class GetProfileRemoteDataSourceImpl implements GetProfileRemoteDataSource {
@@ -44,9 +44,6 @@ class GetProfileRemoteDataSourceImpl implements GetProfileRemoteDataSource {
           ),
         );
 
-        print("RESPONSE Profile BODY: ${response.data}");
-        print("STATUS Profile CODE: ${response.statusCode}");
-
         final GetProfileResponseDm profileResponse =
             GetProfileResponseDm.fromJson(response.data);
 
@@ -60,7 +57,6 @@ class GetProfileRemoteDataSourceImpl implements GetProfileRemoteDataSource {
         return Left(NetworkError(errorMessage: "No Internet Connection"));
       }
     } catch (e) {
-      print("ERROR: $e");
       return Left(ServerError(errorMessage: e.toString()));
     }
   }
