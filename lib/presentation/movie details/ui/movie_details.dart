@@ -56,7 +56,7 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
               slivers: [
                 MovieDetailsAppBar(
                   movie: movie,
-                  isFav: isFavourite,
+                  isFav: state.movieDetailsResponseEntity.isFavourite!,
                   onFavToggle: () {
                     setState(() {
                       isFavourite = !isFavourite;

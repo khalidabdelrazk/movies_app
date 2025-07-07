@@ -3,9 +3,11 @@ import 'package:dio/dio.dart';
 import 'package:either_dart/either.dart';
 import 'package:injectable/injectable.dart';
 import 'package:movies/core/model/failures.dart';
+import 'package:movies/core/utils/shared_pref_services.dart';
 import 'package:movies/presentation/movie%20details/Data/Models/movie_details_response_dm.dart';
 import 'package:movies/presentation/movie%20details/Data/Models/movie_suggestion_response_dm.dart';
 import 'package:movies/presentation/movie%20details/Domain/Entity/movie_details_response_entity.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../../core/api manager/api_endpoints.dart';
 import '../../../../../../core/api manager/api_manager.dart';
 import '../movie_details_remote_data_source.dart';
@@ -23,6 +25,23 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
         await Connectivity().checkConnectivity();
     try {
       if (!connectivityResult.contains(ConnectivityResult.none)) {
+
+        SharedPrefService sharedPrefService = SharedPrefService.instance;
+        String token = sharedPrefService.getToken() ?? "0";
+
+        // Get favorite status
+        final isLiked = await apiManager.getData(
+          path: ApiEndpoints.isFavorite(movieId),
+          options: Options(
+            validateStatus: (status) => true,
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': 'Bearer $token',
+            },
+          ),
+
+        );
+
         // Get movie details
         final response = await apiManager.getData(
           path: ApiEndpoints.movieDetails,
@@ -36,23 +55,12 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
           ),
         );
 
-        // Get favorite status
-        final isLiked = await apiManager.getData(
-          path: ApiEndpoints.isFavorite(movieId),
-          options: Options(
-            validateStatus: (status) => true,
-          ),
-        );
+
 
         final movieDetailsResponseDm = MovieDetailsResponseDm.fromJson(
           response.data,
         );
-        print(" RESPONSE BODY: ${isLiked.data}");
-
-        // print("RESPONSE BODY: ${response.data}");
-        // print("STATUS CODE: ${response.statusCode}");
-
-        if (response.statusCode! >= 200 && response.statusCode! < 300) {
+        if (response.statusCode! >= 200 && response.statusCode! < 300 && isLiked.statusCode! >= 200 && isLiked.statusCode! < 300) {
           // ✅ Inject the isFavourite manually into the entity model (if supported)
           movieDetailsResponseDm.isFavourite = isLiked.data["data"];
           return Right(movieDetailsResponseDm);
@@ -96,8 +104,8 @@ class MovieDetailsRemoteDataSourceImpl implements MovieDetailsRemoteDataSource {
             MovieSuggestionResponseDm.fromJson(
           response.data,
         );
-        print("RESPONSE BODY: ${response.data}");
-        print("STATUS CODE: ${response.statusCode}");
+        // print("RESPONSE BODY: ${response.data}");
+        // print("STATUS CODE: ${response.statusCode}");
         if (response.statusCode! >= 200 && response.statusCode! < 300) {
           return Right(movieSuggestionResponseDm);
         }
