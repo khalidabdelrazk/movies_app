@@ -9,6 +9,7 @@ import 'package:movies/presentation/profile/ui/cubit/profile_page_states.dart';
 class ProfilePageViewModel extends Cubit<ProfilePageStates> {
   ProfileGetUseCase profileGetUseCase;
   WishlistUseCase wishlistUseCase;
+  bool iInititialized = false;
 
   ProfilePageViewModel({required this.profileGetUseCase,required this.wishlistUseCase})
       : super(ProfileInitialState());

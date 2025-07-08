@@ -25,7 +25,11 @@ class _WatchListState extends State<WatchList> {
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-    viewModel.getWishList();
+    if(!viewModel.iInititialized){
+      viewModel.getWishList();
+      viewModel.iInititialized = true;
+    }
+
   }
 
   @override

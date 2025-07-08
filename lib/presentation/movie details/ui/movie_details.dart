@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movies/core/constants/constants.dart';
 import 'package:movies/core/di/di.dart';
 import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/core/utils/network_error_widget.dart';
@@ -72,7 +73,8 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
                      }
                    });
                    await movieDetailsViewModel.addToFav(movie: state.movieDetailsResponseEntity, isFavourite: state.movieDetailsResponseEntity.isFavourite!);
-                   await profilePageViewModel.getWishList();
+                   // await profilePageViewModel.getWishList();
+                    profilePageViewModel.iInititialized = false;
                   },
                 ),
                 SliverToBoxAdapter(
@@ -96,9 +98,7 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
                       SectionTitle(title: 'Summary'),
                       SizedBox(height: 2.h),
                       SummarySection(
-                        summary: movie.data?.movie?.summary ??
-                            "Following the events of Spider-Man No Way Home, Doctor Strange unwittingly casts a forbidden spell that accidentally opens up the multiverse. With help from Wong and Scarlet Witch, Strange confronts various versions of himself as well as teaming up with the young America Chavez while traveling through various realities and working to restore reality as he knows it. Along the way, Strange and his allies realize they must take on a powerful new adversary who seeks to take over the multiverse.—Blazer346",
-                      ),
+                        summary: movie.data?.movie?.summary ?? summary),
                       SizedBox(height: 24.h),
                       SectionTitle(title: 'Cast'),
                       SizedBox(height: 16.h),
