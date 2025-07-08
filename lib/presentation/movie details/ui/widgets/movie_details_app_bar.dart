@@ -27,7 +27,10 @@ class _MovieDetailsAppBarState extends State<MovieDetailsAppBar> {
     final torrentUrl = widget.movie.data?.movie?.torrents?.first.url;
 
     if (torrentUrl != null && await canLaunchUrl(Uri.parse(torrentUrl))) {
-      await launchUrl(Uri.parse(torrentUrl), mode: LaunchMode.externalApplication);
+      await launchUrl(
+        Uri.parse(torrentUrl),
+        mode: LaunchMode.externalApplication,
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Unable to open torrent link')),
@@ -117,21 +120,19 @@ class _MovieDetailsAppBarState extends State<MovieDetailsAppBar> {
                 ),
               ),
 
-              // Download Button (Play Icon)
-              Positioned(
-                top: 70.h,
-                left: 70.w,
+              // Centered Play Button
+              Center(
                 child: GestureDetector(
                   onTap: _downloadTorrent,
                   child: Icon(
-                    Icons.play_circle_outline,
+                    Icons.play_arrow,
                     color: AppColors.primaryYellowColor,
-                    size: 28.r,
+                    size: 80.r,
                   ),
                 ),
               ),
 
-              // Title + Year
+              // Title + Year (only when not collapsed)
               if (!isCollapsed)
                 Positioned(
                   bottom: 32.h,
