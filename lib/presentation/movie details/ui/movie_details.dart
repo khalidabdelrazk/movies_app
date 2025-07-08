@@ -12,6 +12,7 @@ import 'package:movies/presentation/movie%20details/ui/widgets/genre_chips.dart'
 import 'package:movies/presentation/movie%20details/ui/widgets/movie_details_app_bar.dart';
 import 'package:movies/presentation/movie%20details/ui/widgets/screenshot_section.dart';
 import 'package:movies/presentation/movie%20details/ui/widgets/similar_movie_section.dart';
+import 'package:movies/presentation/profile/ui/cubit/profile_page_view_model.dart';
 import 'widgets/movie_actions.dart';
 import 'widgets/section_title.dart';
 import 'widgets/summary_section.dart';
@@ -28,6 +29,8 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
   late MovieDetailsResponseEntity movie;
   final MovieDetailsViewModel movieDetailsViewModel =
       getIt<MovieDetailsViewModel>();
+  final ProfilePageViewModel profilePageViewModel =
+  getIt<ProfilePageViewModel>();
   bool isFavourite = false;
   MoviesEntity? arg;
 
@@ -48,6 +51,7 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
       builder: (context, state) {
         if (state is MovieDetailsErrorState) {
           return NetworkErrorWidget(
+            onTap: () async => movieDetailsViewModel.getMovieDetails(imdbId: arg?.imdbCode?.toString() ?? "0",isFavourite: isFavourite,movieId: arg?.id ?? 0),
               errorMsg: state.errMsg ?? "An error occurred", large: true);
         } else if (state is MovieDetailsSuccessState) {
           movie = state.movieDetailsResponseEntity;
@@ -68,6 +72,7 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
                      }
                    });
                    await movieDetailsViewModel.addToFav(movie: state.movieDetailsResponseEntity, isFavourite: state.movieDetailsResponseEntity.isFavourite!);
+                   await profilePageViewModel.getWishList();
                   },
                 ),
                 SliverToBoxAdapter(

@@ -22,9 +22,9 @@ class _WatchListState extends State<WatchList> {
   ProfilePageViewModel viewModel = getIt<ProfilePageViewModel>();
 
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
     viewModel.getWishList();
   }
 

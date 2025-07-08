@@ -29,6 +29,7 @@ class _SimilarMovieSectionState extends State<SimilarMovieSection> {
       builder: (context, state) {
         if (state is MovieSuggestionErrorState) {
           return NetworkErrorWidget(
+            onTap: () async =>     movieDetailsViewModel.getMovieSuggestion(imdbId: widget.imdbId ?? "0"),
               errorMsg: state.errMsg ?? "An error occurred", large: false);
         } else if (state is MovieSuggestionSuccessState) {
           return SizedBox(

@@ -118,6 +118,7 @@ class _BrowsePageState extends State<BrowsePage> {
                     return NetworkErrorWidget(
                       errorMsg: state.errMessage,
                       large: true,
+                      onTap: () async => exploreViewModel.fetchInitialMovies(selectedGenre),
                     );
                   } else if (state is ExploreSuccessState) {
                     final movies = state.exploreResponseEntity.data?.movies ?? [];
