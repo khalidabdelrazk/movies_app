@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:movies/core/theme/app_styles.dart';
 
 class NetworkErrorWidget extends StatefulWidget {
   final String errorMsg;
@@ -9,7 +8,7 @@ class NetworkErrorWidget extends StatefulWidget {
   const NetworkErrorWidget({
     super.key,
     required this.errorMsg,
-    required this.onTap,
+    this.onTap,
     required this.large,
   });
 
@@ -33,17 +32,16 @@ class _NetworkErrorWidgetState extends State<NetworkErrorWidget> {
           Text(
             "Network Error",
             style: widget.large
-                ? AppStyles.lightRegular16
-                : AppStyles.lightRegular16.copyWith(fontSize: 14),
+                ? Theme.of(context).textTheme.titleLarge
+                : Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
           Text(
             widget.errorMsg,
             textAlign: TextAlign.center,
-            overflow: TextOverflow.ellipsis,
             style: widget.large
-                ? AppStyles.lightRegular16.copyWith(fontSize: 14)
-                : AppStyles.lightRegular16.copyWith(fontSize: 12),
+                ? Theme.of(context).textTheme.bodyMedium
+                : Theme.of(context).textTheme.bodySmall,
           ),
           const SizedBox(height: 24),
           ElevatedButton.icon(

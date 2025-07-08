@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies/core/di/di.dart';
+import 'package:movies/core/routes/route_names.dart';
 import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/core/theme/app_styles.dart';
 import 'package:movies/presentation/browse/ui/cubit/explore_states.dart';
@@ -35,7 +36,7 @@ class _BrowsePageState extends State<BrowsePage> {
 
   void _onScroll() {
     if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 100 &&
+            _scrollController.position.maxScrollExtent - 100 &&
         !exploreViewModel.isLoadingMore) {
       exploreViewModel.fetchMoreMovies();
     }
@@ -84,7 +85,7 @@ class _BrowsePageState extends State<BrowsePage> {
                     },
                     child: Container(
                       padding:
-                      EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                          EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
                       decoration: BoxDecoration(
                         color: isSelected
                             ? AppColors.primaryYellowColor
@@ -95,8 +96,10 @@ class _BrowsePageState extends State<BrowsePage> {
                         child: Text(
                           item,
                           style: isSelected
-                              ? AppStyles.darkSemiBold20.copyWith(fontSize: 14.sp)
-                              : AppStyles.lightRegular16.copyWith(fontSize: 14.sp),
+                              ? AppStyles.darkSemiBold20
+                                  .copyWith(fontSize: 14.sp)
+                              : AppStyles.lightRegular16
+                                  .copyWith(fontSize: 14.sp),
                         ),
                       ),
                     ),
@@ -118,10 +121,12 @@ class _BrowsePageState extends State<BrowsePage> {
                     return NetworkErrorWidget(
                       errorMsg: state.errMessage,
                       large: true,
-                      onTap: () async => exploreViewModel.fetchInitialMovies(selectedGenre),
+                      onTap: () async =>
+                          exploreViewModel.fetchInitialMovies(selectedGenre),
                     );
                   } else if (state is ExploreSuccessState) {
-                    final movies = state.exploreResponseEntity.data?.movies ?? [];
+                    final movies =
+                        state.exploreResponseEntity.data?.movies ?? [];
 
                     return GridView.builder(
                       controller: _scrollController,
@@ -136,7 +141,13 @@ class _BrowsePageState extends State<BrowsePage> {
                       ),
                       itemBuilder: (context, index) {
                         if (index < movies.length) {
-                          return MoviePosterCard(movie: movies[index]);
+                          return MoviePosterCard(
+                            movie: movies[index],
+                            onPressed: () {
+                              Navigator.pushNamed(
+                                  context, RouteNames.movieDetails);
+                            },
+                          );
                         } else {
                           return Center(
                             child: SizedBox(

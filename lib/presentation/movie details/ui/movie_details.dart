@@ -31,7 +31,7 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
   final MovieDetailsViewModel movieDetailsViewModel =
       getIt<MovieDetailsViewModel>();
   final ProfilePageViewModel profilePageViewModel =
-  getIt<ProfilePageViewModel>();
+      getIt<ProfilePageViewModel>();
   bool isFavourite = false;
   MoviesEntity? arg;
 
@@ -41,7 +41,10 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
     arg ??= ModalRoute.of(context)?.settings.arguments as MoviesEntity?;
 
     if (arg != null) {
-      movieDetailsViewModel.getMovieDetails(imdbId: arg?.imdbCode?.toString() ?? "0",isFavourite: isFavourite,movieId: arg?.id ?? 0);
+      movieDetailsViewModel.getMovieDetails(
+          imdbId: arg?.imdbCode?.toString() ?? "0",
+          isFavourite: isFavourite,
+          movieId: arg?.id ?? 0);
     }
   }
 
@@ -52,8 +55,12 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
       builder: (context, state) {
         if (state is MovieDetailsErrorState) {
           return NetworkErrorWidget(
-            onTap: () async => movieDetailsViewModel.getMovieDetails(imdbId: arg?.imdbCode?.toString() ?? "0",isFavourite: isFavourite,movieId: arg?.id ?? 0),
-              errorMsg: state.errMsg ?? "An error occurred", large: true);
+              onTap: () async => movieDetailsViewModel.getMovieDetails(
+                  imdbId: arg?.imdbCode?.toString() ?? "0",
+                  isFavourite: isFavourite,
+                  movieId: arg?.id ?? 0),
+              errorMsg: state.errMsg ?? "An error occurred",
+              large: true);
         } else if (state is MovieDetailsSuccessState) {
           movie = state.movieDetailsResponseEntity;
           return Scaffold(
@@ -63,18 +70,30 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
                 MovieDetailsAppBar(
                   movie: movie,
                   isFav: state.movieDetailsResponseEntity.isFavourite!,
-                  onFavToggle: () async{
-                   setState(() {
-                     state.movieDetailsResponseEntity.isFavourite = !state.movieDetailsResponseEntity.isFavourite!;
-                     if(state.movieDetailsResponseEntity.isFavourite!){
-                       state.movieDetailsResponseEntity.data?.movie?.likeCount = (state.movieDetailsResponseEntity.data?.movie?.likeCount?? 0) + 1;
-                     }else{
-                       state.movieDetailsResponseEntity.data?.movie?.likeCount = (state.movieDetailsResponseEntity.data?.movie?.likeCount?? 0) - 1;
-                     }
-                   });
-                   await movieDetailsViewModel.addToFav(movie: state.movieDetailsResponseEntity, isFavourite: state.movieDetailsResponseEntity.isFavourite!);
-                   // await profilePageViewModel.getWishList();
-                    profilePageViewModel.iInititialized = false;
+                  onFavToggle: () async {
+                    setState(() {
+                      state.movieDetailsResponseEntity.isFavourite =
+                          !state.movieDetailsResponseEntity.isFavourite!;
+                      if (state.movieDetailsResponseEntity.isFavourite!) {
+                        state.movieDetailsResponseEntity.data?.movie
+                            ?.likeCount = (state.movieDetailsResponseEntity.data
+                                    ?.movie?.likeCount ??
+                                0) +
+                            1;
+                      } else {
+                        state.movieDetailsResponseEntity.data?.movie
+                            ?.likeCount = (state.movieDetailsResponseEntity.data
+                                    ?.movie?.likeCount ??
+                                0) -
+                            1;
+                      }
+                    });
+                    await profilePageViewModel.getWishList();
+                    await movieDetailsViewModel.addToFav(
+                        movie: state.movieDetailsResponseEntity,
+                        isFavourite:
+                            state.movieDetailsResponseEntity.isFavourite!);
+                    // profilePageViewModel.iInititialized = false;
                   },
                 ),
                 SliverToBoxAdapter(
@@ -98,7 +117,7 @@ class _MovieDetailsScreenState extends State<MovieDetails> {
                       SectionTitle(title: 'Summary'),
                       SizedBox(height: 2.h),
                       SummarySection(
-                        summary: movie.data?.movie?.summary ?? summary),
+                          summary: movie.data?.movie?.summary ?? summary),
                       SizedBox(height: 24.h),
                       SectionTitle(title: 'Cast'),
                       SizedBox(height: 16.h),

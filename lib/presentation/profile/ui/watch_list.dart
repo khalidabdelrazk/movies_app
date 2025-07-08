@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies/presentation/home/Domain/Entity/movies_response_entity.dart';
 import 'package:movies/presentation/profile/ui/cubit/profile_page_states.dart';
-
 import '../../../core/di/di.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../core/theme/app_styles.dart';
@@ -19,58 +18,44 @@ class WatchList extends StatefulWidget {
 }
 
 class _WatchListState extends State<WatchList> {
-  ProfilePageViewModel viewModel = getIt<ProfilePageViewModel>();
+  final ProfilePageViewModel viewModel = getIt<ProfilePageViewModel>();
 
   @override
-  void didChangeDependencies() {
-    // TODO: implement didChangeDependencies
-    super.didChangeDependencies();
-    if(!viewModel.iInititialized){
-      viewModel.getWishList();
-      viewModel.iInititialized = true;
-    }
-
+  void initState() {
+    super.initState();
+    viewModel.getWishList(); // <-- fetch data on init
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder(
+    return BlocBuilder<ProfilePageViewModel, ProfilePageStates>(
       bloc: viewModel,
       builder: (context, state) {
         if (state is ProfileLoadingState) {
-          return const SafeArea(
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        } else if (state is ProfileErrorState) {
+          return const SafeArea(child: Center(child: CircularProgressIndicator()));
+        } else if (state is ProfileErrorState || state is WishlistErrorState) {
           return SafeArea(
             child: Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64.sp,
-                    color: AppColors.red,
-                  ),
+                  Icon(Icons.error_outline, size: 64.sp, color: AppColors.red),
                   SizedBox(height: 16.h),
-                  Text(
-                    'Error',
-                    style: AppStyles.lightBold24,
-                  ),
+                  Text('Error', style: AppStyles.lightBold24),
                   SizedBox(height: 8.h),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 32.w),
                     child: Text(
-                      state.failures.errorMessage,
+                      state is ProfileErrorState
+                          ? state.failures.errorMessage
+                          : (state as WishlistErrorState).failures.errorMessage,
                       style: AppStyles.lightRegular16,
                       textAlign: TextAlign.center,
                     ),
                   ),
                   SizedBox(height: 24.h),
                   CustomElvatedButton(
-                    onPressed: () => viewModel.getData(),
+                    onPressed: () => viewModel.getWishList(),
                     text: 'Retry',
                     backgroundColor: AppColors.primaryYellowColor,
                     textStyle: AppStyles.darkGrayRegular20,
@@ -83,35 +68,33 @@ class _WatchListState extends State<WatchList> {
           return Padding(
             padding: EdgeInsets.only(left: 12.w, right: 12.w, bottom: 55),
             child: GridView.builder(
-              itemCount: state.wishlistEntity.data!.length,
+              itemCount: viewModel.response?.data?.length ?? 0,
               padding: EdgeInsets.zero,
               physics: const BouncingScrollPhysics(),
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 10.w,
                 mainAxisSpacing: 10.h,
-                childAspectRatio:
-                    198 / 279, // match MoviePosterCard aspect ratio
+                childAspectRatio: 198 / 279,
               ),
               itemBuilder: (context, index) {
+                final movie = viewModel.response!.data![index];
                 return MoviePosterCard(
                   width: 122.w,
                   height: 179.h,
                   movie: MoviesEntity(
-                      rating: state.wishlistEntity.data![index].rating,
-                      mediumCoverImage:
-                          state.wishlistEntity.data![index].imageURL),
+                    rating: movie.rating,
+                    mediumCoverImage: movie.imageURL,
+                  ),
                   onPressed: () {
-                    // todo: Navigate to details
+                    // TODO: Navigate to MovieDetails
                   },
                 );
               },
             ),
           );
         }
-        return Scaffold(
-          backgroundColor: Colors.green,
-        );
+        return const SizedBox.shrink();
       },
     );
   }

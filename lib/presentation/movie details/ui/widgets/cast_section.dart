@@ -26,7 +26,7 @@ class CastSection extends StatelessWidget {
           ),
           child: Row(
             children: [
-              Image.asset(AppAssets.profilePic5),
+              Image.asset(AppAssets.profiles[index],width: 70.w,height: 70.h,),
               SizedBox(
                 width: 10,
               ),

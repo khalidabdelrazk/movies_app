@@ -1,11 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:injectable/injectable.dart';
 
-@injectable
+@singleton
 class ApiManager {
-  final Dio dio;
-
-  ApiManager(this.dio);
+  final Dio dio = Dio();
 
   Future<Response> getData({
     required String path,
@@ -15,14 +13,12 @@ class ApiManager {
     CancelToken? cancelToken,
     void Function(int, int)? onReceiveProgress,
   }) async {
-    return dio.get(
-      path,
-      data: data,
-      queryParameters: queryParameters,
-      options: options,
-      cancelToken: cancelToken,
-      onReceiveProgress: onReceiveProgress,
-    );
+    return dio.get(path,
+        queryParameters: queryParameters,
+        data: data,
+        options: options,
+        cancelToken: cancelToken,
+        onReceiveProgress: onReceiveProgress);
   }
 
   Future<Response> postData({
@@ -36,8 +32,8 @@ class ApiManager {
   }) async {
     return dio.post(
       path,
-      data: data,
       queryParameters: queryParameters,
+      data: data,
       options: options,
       cancelToken: cancelToken,
       onSendProgress: onSendProgress,
@@ -54,15 +50,13 @@ class ApiManager {
     void Function(int, int)? onSendProgress,
     void Function(int, int)? onReceiveProgress,
   }) async {
-    return dio.patch(
-      path,
-      data: data,
-      queryParameters: queryParameters,
-      options: options,
-      cancelToken: cancelToken,
-      onSendProgress: onSendProgress,
-      onReceiveProgress: onReceiveProgress,
-    );
+    return dio.patch(path,
+        data: data,
+        queryParameters: queryParameters,
+        options: options,
+        cancelToken: cancelToken,
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress);
   }
 
   Future<Response> deleteData({

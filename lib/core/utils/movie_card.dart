@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movies/core/assets/app_assets.dart';
 import 'package:movies/core/routes/route_names.dart';
 import 'package:movies/core/theme/app_colors.dart';
@@ -9,38 +9,46 @@ import 'custom_image.dart';
 
 class MoviePosterCard extends StatelessWidget {
   final MoviesEntity movie;
-  final double? width, height;
+  final double width;
+  final double height;
   final VoidCallback? onPressed;
 
   const MoviePosterCard({
     super.key,
     required this.movie,
+    double? width,
+    double? height,
     this.onPressed,
-    this.width,
-    this.height,
-  });
+  })  : width = width ?? 198,
+        height = height ?? 279;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-          Navigator.of(context)
-              .pushNamed(RouteNames.movieDetails, arguments: movie);
+        if (onPressed != null) {
+          onPressed!();
+        } else {
+          Navigator.of(context).pushNamed(
+            RouteNames.movieDetails,
+            arguments: movie,
+          );
+        }
       },
       child: Container(
-        width: width ?? 198.sp,
-        height: height ?? 279.sp,
+        width: width.sp,
+        height: height.sp,
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12.r),
         ),
         child: Stack(
           children: [
-            // Movie Poster Image
+            // Poster Image
             CustomImage(
               movie.mediumCoverImage ?? '',
-              width: width ?? 198.sp,
-              height: height ?? 279.sp,
+              width: width.sp,
+              height: height.sp,
               isNetwork: true,
               fit: BoxFit.cover,
               radius: 12.r,
@@ -58,7 +66,6 @@ class MoviePosterCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Row(
-                  textDirection: TextDirection.ltr,
                   children: [
                     Text(
                       movie.rating?.toString() ?? '',
