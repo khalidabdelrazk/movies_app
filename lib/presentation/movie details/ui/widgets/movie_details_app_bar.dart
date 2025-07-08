@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/presentation/movie%20details/Domain/Entity/movie_details_response_entity.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MovieDetailsAppBar extends StatefulWidget {
   final MovieDetailsResponseEntity movie;
-
   final bool isFav;
   final VoidCallback onFavToggle;
 
@@ -15,6 +15,7 @@ class MovieDetailsAppBar extends StatefulWidget {
     required this.isFav,
     required this.onFavToggle,
   });
+
   @override
   State<MovieDetailsAppBar> createState() => _MovieDetailsAppBarState();
 }
@@ -22,10 +23,22 @@ class MovieDetailsAppBar extends StatefulWidget {
 class _MovieDetailsAppBarState extends State<MovieDetailsAppBar> {
   bool isCollapsed = false;
 
+  Future<void> _downloadTorrent() async {
+    final torrentUrl = widget.movie.data?.movie?.torrents?.first.url;
+
+    if (torrentUrl != null && await canLaunchUrl(Uri.parse(torrentUrl))) {
+      await launchUrl(Uri.parse(torrentUrl), mode: LaunchMode.externalApplication);
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Unable to open torrent link')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
-      pinned: false, // ❌ not pinned
+      pinned: false,
       stretch: true,
       expandedHeight: 500.h,
       automaticallyImplyLeading: false,
@@ -76,7 +89,7 @@ class _MovieDetailsAppBarState extends State<MovieDetailsAppBar> {
                 ),
               ),
 
-              // Top Right Favorite Button
+              // Favorite Button
               Positioned(
                 top: 70.h,
                 right: 20.w,
@@ -90,7 +103,7 @@ class _MovieDetailsAppBarState extends State<MovieDetailsAppBar> {
                 ),
               ),
 
-              // Center Play Button
+              // Back Button
               Positioned(
                 top: 70.h,
                 left: 20.w,
@@ -98,6 +111,20 @@ class _MovieDetailsAppBarState extends State<MovieDetailsAppBar> {
                   onTap: () => Navigator.pop(context),
                   child: Icon(
                     Icons.arrow_back_ios_new,
+                    color: AppColors.primaryYellowColor,
+                    size: 28.r,
+                  ),
+                ),
+              ),
+
+              // Download Button (Play Icon)
+              Positioned(
+                top: 70.h,
+                left: 70.w,
+                child: GestureDetector(
+                  onTap: _downloadTorrent,
+                  child: Icon(
+                    Icons.play_circle_outline,
                     color: AppColors.primaryYellowColor,
                     size: 28.r,
                   ),

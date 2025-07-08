@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:movies/core/assets/app_assets.dart';
 import 'package:movies/core/theme/app_colors.dart';
 import 'package:movies/presentation/movie%20details/Domain/Entity/movie_details_response_entity.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MovieActions extends StatelessWidget {
   final MovieDetailsResponseEntity movieDetailsResponseEntity;
@@ -18,8 +19,15 @@ class MovieActions extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ElevatedButton(
-            onPressed: () {
-              // Handle watch now
+            onPressed: () async {
+              final url = movieDetailsResponseEntity.data?.movie?.url;
+              if (url != null && await canLaunchUrl(Uri.parse(url))) {
+                await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Could not open movie URL')),
+                );
+              }
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.red,
@@ -29,7 +37,7 @@ class MovieActions extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 14.h),
             ),
             child: Text(
-              'Watch',
+              'See more',
               style: TextStyle(
                 color: AppColors.light,
                 fontSize: 16.sp,
@@ -41,41 +49,24 @@ class MovieActions extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 30,vertical: 20),
-                decoration: BoxDecoration(
-                  color: AppColors.scaffoldBgColor,
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              _RatingContainer(
                 child: RatingItem(
                   imagePath: AppAssets.love,
-                  value: movieDetailsResponseEntity.data?.movie?.likeCount.toString() ?? ' 90',
+                  value: movieDetailsResponseEntity.data?.movie?.likeCount.toString() ?? '90',
                   color: AppColors.primaryYellowColor,
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 30,vertical: 20),
-                decoration: BoxDecoration(
-                  color: AppColors.scaffoldBgColor,
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              _RatingContainer(
                 child: RatingItem(
                   imagePath: AppAssets.timer,
-                  value: movieDetailsResponseEntity.data?.movie?.runtime.toString() ?? ' 90',
+                  value: movieDetailsResponseEntity.data?.movie?.runtime.toString() ?? '90',
                   color: AppColors.primaryYellowColor,
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 30,vertical: 20),
-                decoration: BoxDecoration(
-                  color: AppColors.scaffoldBgColor,
-                  borderRadius: BorderRadius.circular(12),
-                ),
+              _RatingContainer(
                 child: RatingItem(
                   imagePath: AppAssets.star,
-                  value: movieDetailsResponseEntity.data?.movie?.rating
-                      ?.toString() ??
-                      "0.0",
+                  value: movieDetailsResponseEntity.data?.movie?.rating?.toString() ?? "0.0",
                   color: AppColors.primaryYellowColor,
                 ),
               ),
@@ -83,6 +74,23 @@ class MovieActions extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class _RatingContainer extends StatelessWidget {
+  final Widget child;
+  const _RatingContainer({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+      decoration: BoxDecoration(
+        color: AppColors.scaffoldBgColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: child,
     );
   }
 }
