@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-
 class CustomImage extends StatelessWidget {
   const CustomImage(
     this.image, {
@@ -31,6 +30,9 @@ class CustomImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isValidUrl =
+        image.startsWith('http://') || image.startsWith('https://');
+
     return Container(
       width: width,
       height: height,
@@ -39,28 +41,33 @@ class CustomImage extends StatelessWidget {
         borderRadius: BorderRadius.circular(radius),
         boxShadow: [
           if (isShadow)
-            BoxShadow(
+            const BoxShadow(
               spreadRadius: 1,
               blurRadius: 1,
-              offset: Offset(0, 1), // changes position of shadow
+              offset: Offset(0, 1),
             ),
         ],
       ),
-      child:
-          isNetwork
+      child: isNetwork
+          ? (isValidUrl
               ? CachedNetworkImage(
-                imageUrl: image,
-                placeholder: (context, url) => Center(child: CircularProgressIndicator()),
-                errorWidget: (context, url, error) => Icon(Icons.broken_image),
-                imageBuilder:
-                    (context, imageProvider) => Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(radius),
-                        image: DecorationImage(image: imageProvider, fit: fit),
+                  imageUrl: image,
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) =>
+                      const Icon(Icons.broken_image),
+                  imageBuilder: (context, imageProvider) => Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(radius),
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: fit,
                       ),
                     ),
-              )
-              : Image(image: AssetImage(image), fit: fit),
+                  ),
+                )
+              : const Icon(Icons.broken_image)) // fallback if URL is invalid
+          : Image(image: AssetImage(image), fit: fit),
     );
   }
 }

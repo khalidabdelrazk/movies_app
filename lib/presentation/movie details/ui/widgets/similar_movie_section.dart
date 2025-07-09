@@ -33,7 +33,7 @@ class _SimilarMovieSectionState extends State<SimilarMovieSection> {
               errorMsg: state.errMsg ?? "An error occurred", large: false);
         } else if (state is MovieSuggestionSuccessState) {
           return SizedBox(
-            height: 220.h,
+            height: 270.h,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -43,7 +43,7 @@ class _SimilarMovieSectionState extends State<SimilarMovieSection> {
               itemBuilder: (context, index) {
                 return MoviePosterCard(
                     movie: state
-                        .movieSuggestionResponseEntity.data!.movies![index]);
+                        .movieSuggestionResponseEntity.data!.movies![index],height: 270.h,);
               },
             ),
           );

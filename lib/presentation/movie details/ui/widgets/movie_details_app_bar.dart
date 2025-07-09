@@ -125,7 +125,7 @@ class _MovieDetailsAppBarState extends State<MovieDetailsAppBar> {
                 child: GestureDetector(
                   onTap: _downloadTorrent,
                   child: Icon(
-                    Icons.play_arrow,
+                    Icons.play_circle_filled,
                     color: AppColors.primaryYellowColor,
                     size: 80.r,
                   ),

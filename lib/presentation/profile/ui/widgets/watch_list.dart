@@ -3,12 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies/presentation/home/Domain/Entity/movies_response_entity.dart';
 import 'package:movies/presentation/profile/ui/cubit/profile_page_states.dart';
-import '../../../core/di/di.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../core/theme/app_styles.dart';
-import '../../../core/utils/custom_elvated_button.dart';
-import '../../../core/utils/movie_card.dart';
-import 'cubit/profile_page_view_model.dart';
+import '../../../../core/di/di.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_styles.dart';
+import '../../../../core/utils/custom_elvated_button.dart';
+import '../../../../core/utils/movie_card.dart';
+import '../cubit/profile_page_view_model.dart';
 
 class WatchList extends StatefulWidget {
   const WatchList({super.key});

@@ -23,16 +23,17 @@ class CategoryMovieSlider extends StatefulWidget {
 
 class _CategoryMovieSliderState extends State<CategoryMovieSlider> {
   HomeViewModel homeViewModel = getIt<HomeViewModel>();
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     homeViewModel.getMostPopularMovies(genre: widget.genre);
   }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 230.h,
+      height: 300.h,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -60,7 +61,7 @@ class _CategoryMovieSliderState extends State<CategoryMovieSlider> {
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: EdgeInsets.only(right: 20.w),
-                          child: MoviePosterCard(movie: movies[index],height: 220.h,width: 146.w,),
+                          child: MoviePosterCard(movie: movies[index],height: 300.h,width: 180.w,),
                         );
                       },
                   ),

@@ -50,14 +50,7 @@ class LoginState extends State<Login> {
         } else if (state is SuccessState) {
           DialogUtils.hideLoading(context);
           await SharedPrefService.instance.setToken(state.response.data);
-          DialogUtils.showMessage(
-              context: context,
-              message: 'Login Successfully \n ${state.response.data}',
-              title: "Success",
-              posActionName: 'Ok',
-              posAction: () {
-                Navigator.pushReplacementNamed(context, RouteNames.root);
-              });
+          Navigator.pushNamedAndRemoveUntil(context, RouteNames.root, (route) => false,);
         }
       },
       child: Scaffold(

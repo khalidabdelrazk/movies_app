@@ -3,8 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:movies/core/assets/app_assets.dart';
 import 'package:movies/core/theme/app_colors.dart';
-import 'package:movies/presentation/search/ui/cubit/search_view_model.dart';
+import 'package:movies/core/utils/network_error_widget.dart';
 import 'package:movies/presentation/search/ui/cubit/search_states.dart';
+import 'package:movies/presentation/search/ui/cubit/search_view_model.dart';
+
 import '../../../core/utils/custom_text_field.dart';
 import '../../../core/utils/movie_card.dart';
 
@@ -16,52 +18,20 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final TextEditingController _searchController = TextEditingController();
-  final ScrollController _scrollController = ScrollController();
-  int _currentPage = 1;
-  final int _limit = 10;
-  String _lastQuery = '';
-  bool _isFetchingMore = false;
+  late final SearchViewModel viewModel;
 
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    viewModel = context.read<SearchViewModel>();
+    viewModel.scrollController.addListener(viewModel.onScroll);
   }
 
   @override
   void dispose() {
-    _scrollController.dispose();
-    _searchController.dispose();
+    viewModel.scrollController.removeListener(viewModel.onScroll);
+    viewModel.searchController.dispose();
     super.dispose();
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-        _scrollController.position.maxScrollExtent - 300 &&
-        !_isFetchingMore &&
-        context.read<SearchViewModel>().state is SearchSuccessState) {
-      final state = context.read<SearchViewModel>().state as SearchSuccessState;
-      if (state.searchResponseEntity.data!.movies!.length >= _limit) {
-        _isFetchingMore = true;
-        _currentPage++;
-        context.read<SearchViewModel>().getMoviesByQuery(
-          queryTerm: _lastQuery,
-          limit: _limit,
-          page: _currentPage,
-        );
-      }
-    }
-  }
-
-  void _onSearch(String query) {
-    _lastQuery = query;
-    _currentPage = 1;
-    context.read<SearchViewModel>().getMoviesByQuery(
-      queryTerm: query,
-      limit: _limit,
-      page: _currentPage,
-    );
   }
 
   @override
@@ -73,31 +43,42 @@ class _SearchPageState extends State<SearchPage> {
           children: [
             CustomTextField(
               label: 'Search',
-              controller: _searchController,
+              controller: viewModel.searchController,
               prefixIcon: Icon(Icons.search, color: AppColors.light),
               backgroundColor: AppColors.darkGray,
               labelColor: AppColors.light,
               inputColor: AppColors.light,
               borderColor: AppColors.transparent,
-              onChanged: (value) => _onSearch(value),
+              onChanged: (value) => viewModel.onSearch(value),
+              suffixIcon: GestureDetector(onTap: () {
+                FocusScope.of(context).unfocus();
+                viewModel.searchController.clear();
+                viewModel.onSearch("");
+              },child: Icon(Icons.clear,color: AppColors.light,),),
             ),
             SizedBox(height: 20.h),
             Expanded(
-              child: BlocConsumer<SearchViewModel, SearchStates>(
-                listener: (context, state) {
-                  if (state is SearchSuccessState) {
-                    _isFetchingMore = false;
-                  }
-                },
+              child: BlocBuilder<SearchViewModel, SearchStates>(
                 builder: (context, state) {
-                  if (state is SearchLoadingState && _currentPage == 1) {
-                    return Center(child: CircularProgressIndicator());
+                  if (state is SearchLoadingState &&
+                      viewModel.currentPage == 1) {
+                    return const Center(child: CircularProgressIndicator());
                   } else if (state is SearchErrorState) {
-                    return Center(child: Text(state.message));
+                    return NetworkErrorWidget(
+                      errorMsg: state.message,
+                      large: true,
+                      onTap: () async => viewModel.getMoviesByQuery(
+                        queryTerm: viewModel.lastQuery,
+                        limit: viewModel.limit,
+                        page: viewModel.currentPage,
+                      ),
+                    );
                   } else if (state is SearchSuccessState) {
-                    final movies = state.searchResponseEntity.data?.movies ?? [];
+                    final movies =
+                        state.searchResponseEntity.data?.movies ?? [];
 
-                    if (_searchController.text.isEmpty || movies.isEmpty) {
+                    if (viewModel.searchController.text.isEmpty ||
+                        movies.isEmpty) {
                       return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -121,22 +102,24 @@ class _SearchPageState extends State<SearchPage> {
                     }
 
                     return GridView.builder(
-                      controller: _scrollController,
+                      controller: viewModel.scrollController,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         mainAxisSpacing: 12.sp,
                         crossAxisSpacing: 12.sp,
                         childAspectRatio: 198 / 279,
                       ),
-                      itemCount: movies.length + (_isFetchingMore ? 1 : 0),
+                      itemCount:
+                          movies.length + (viewModel.isFetchingMore ? 1 : 0),
                       itemBuilder: (context, index) {
-                        if (index == movies.length) {
+                        if (index == movies.length &&
+                            viewModel.isFetchingMore) {
                           return SizedBox(
                             width: double.infinity,
                             child: Center(
                               child: Padding(
                                 padding: EdgeInsets.symmetric(vertical: 16.h),
-                                child: CircularProgressIndicator(),
+                                child: const CircularProgressIndicator(),
                               ),
                             ),
                           );

@@ -11,7 +11,7 @@ import 'package:movies/core/utils/network_error_widget.dart';
 import 'package:movies/core/utils/shared_pref_services.dart';
 import 'package:movies/presentation/profile/ui/cubit/profile_page_states.dart';
 import 'package:movies/presentation/profile/ui/cubit/profile_page_view_model.dart';
-import '../../../core/utils/dialog_utils.dart';
+import '../../../../core/utils/dialog_utils.dart';
 
 class ProfileWidget extends StatefulWidget {
   const ProfileWidget({super.key});

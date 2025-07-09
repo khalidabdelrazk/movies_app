@@ -9,7 +9,7 @@ import 'package:movies/presentation/browse/ui/cubit/explore_states.dart';
 import 'package:movies/presentation/browse/ui/cubit/explore_view_model.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/utils/movie_card.dart';
-import '../../../core/utils/network_error_widget.dart'; // ✅ Make sure it's imported
+import '../../../core/utils/network_error_widget.dart';
 
 class BrowsePage extends StatefulWidget {
   const BrowsePage({super.key});
@@ -20,38 +20,13 @@ class BrowsePage extends StatefulWidget {
 
 class _BrowsePageState extends State<BrowsePage> {
   final exploreViewModel = getIt<ExploreViewModel>();
-  final ScrollController _scrollController = ScrollController();
-  final ScrollController _chipsScrollController = ScrollController();
-  late List<GlobalKey> _chipKeys;
-
-  String selectedGenre = genre[0];
 
   @override
   void initState() {
     super.initState();
-    _chipKeys = List.generate(genre.length, (_) => GlobalKey());
-    exploreViewModel.fetchInitialMovies(selectedGenre);
-    _scrollController.addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels >=
-            _scrollController.position.maxScrollExtent - 100 &&
-        !exploreViewModel.isLoadingMore) {
-      exploreViewModel.fetchMoreMovies();
-    }
-  }
-
-  void _scrollToSelectedChip(int index) {
-    final keyContext = _chipKeys[index].currentContext;
-    if (keyContext != null) {
-      Scrollable.ensureVisible(
-        keyContext,
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        alignment: 0.5,
-      );
-    }
+    exploreViewModel.chipKeys = List.generate(genre.length, (_) => GlobalKey());
+    exploreViewModel.fetchInitialMovies(exploreViewModel.selectedGenre);
+    exploreViewModel.scrollController.addListener(exploreViewModel.onScroll);
   }
 
   @override
@@ -65,23 +40,23 @@ class _BrowsePageState extends State<BrowsePage> {
             SizedBox(
               height: 40.h,
               child: ListView.separated(
-                controller: _chipsScrollController,
+                controller: exploreViewModel.chipsScrollController,
                 scrollDirection: Axis.horizontal,
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 itemCount: genre.length,
                 separatorBuilder: (_, __) => SizedBox(width: 8.w),
                 itemBuilder: (context, index) {
                   final item = genre[index];
-                  final isSelected = item == selectedGenre;
+                  final isSelected = item == exploreViewModel.selectedGenre;
 
                   return GestureDetector(
-                    key: _chipKeys[index],
+                    key: exploreViewModel.chipKeys[index],
                     onTap: () {
                       setState(() {
-                        selectedGenre = item;
+                        exploreViewModel.selectedGenre = item;
                       });
                       exploreViewModel.fetchInitialMovies(item);
-                      _scrollToSelectedChip(index);
+                      exploreViewModel.scrollToSelectedChip(index);
                     },
                     child: Container(
                       padding:
@@ -122,16 +97,15 @@ class _BrowsePageState extends State<BrowsePage> {
                       errorMsg: state.errMessage,
                       large: true,
                       onTap: () async =>
-                          exploreViewModel.fetchInitialMovies(selectedGenre),
+                          exploreViewModel.fetchInitialMovies(exploreViewModel.selectedGenre),
                     );
                   } else if (state is ExploreSuccessState) {
                     final movies =
                         state.exploreResponseEntity.data?.movies ?? [];
 
                     return GridView.builder(
-                      controller: _scrollController,
-                      itemCount: movies.length +
-                          (exploreViewModel.isLoadingMore ? 1 : 0),
+                      controller: exploreViewModel.scrollController,
+                      itemCount: movies.length,
                       padding: EdgeInsets.symmetric(horizontal: 12.w),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
@@ -140,26 +114,13 @@ class _BrowsePageState extends State<BrowsePage> {
                         childAspectRatio: 0.65,
                       ),
                       itemBuilder: (context, index) {
-                        if (index < movies.length) {
-                          return MoviePosterCard(
-                            movie: movies[index],
-                            onPressed: () {
-                              Navigator.pushNamed(
-                                  context, RouteNames.movieDetails);
-                            },
-                          );
-                        } else {
-                          return Center(
-                            child: SizedBox(
-                              width: 24.sp,
-                              height: 24.sp,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2,
-                                color: AppColors.primaryYellowColor,
-                              ),
-                            ),
-                          );
-                        }
+                        return MoviePosterCard(
+                          movie: movies[index],
+                          onPressed: () {
+                            Navigator.pushNamed(
+                                context, RouteNames.movieDetails);
+                          },
+                        );
                       },
                     );
                   }

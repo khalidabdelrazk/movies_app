@@ -25,10 +25,7 @@ class _MostPopularState extends State<MostPopularSlider> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    final currentState = homeViewModel.state;
-    if (currentState is! MostPopularSuccessState) {
-      homeViewModel.getMostPopularMovies();
-    }
+    homeViewModel.getMostPopularMovies();
   }
 
   @override

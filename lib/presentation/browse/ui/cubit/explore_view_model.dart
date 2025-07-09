@@ -1,8 +1,11 @@
+import 'package:flutter/cupertino.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:injectable/injectable.dart';
 import 'package:movies/presentation/browse/Domain/Entity/explore_response_entity.dart';
 import 'package:movies/presentation/browse/Domain/Use%20Case/explore_use_case.dart';
 import 'package:movies/presentation/browse/ui/cubit/explore_states.dart';
+
+import '../../../../core/constants/constants.dart';
 
 @injectable
 class ExploreViewModel extends HydratedCubit<ExploreStates> {
@@ -12,6 +15,11 @@ class ExploreViewModel extends HydratedCubit<ExploreStates> {
   int currentPage = 1;
   final int limit = 6;
   bool isLoadingMore = false;
+  final ScrollController scrollController = ScrollController();
+  final ScrollController chipsScrollController = ScrollController();
+  late List<GlobalKey> chipKeys;
+
+  String selectedGenre = genre[0];
 
   List<MoviesExploreEntity> allMovies = [];
 
@@ -43,6 +51,29 @@ class ExploreViewModel extends HydratedCubit<ExploreStates> {
       },
     );
   }
+
+
+  void onScroll() {
+    if (scrollController.position.pixels >=
+        scrollController.position.maxScrollExtent - 100 &&
+        !isLoadingMore) {
+      fetchMoreMovies();
+    }
+  }
+
+  void scrollToSelectedChip(int index) {
+    final keyContext = chipKeys[index].currentContext;
+    if (keyContext != null) {
+      Scrollable.ensureVisible(
+        keyContext,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+        alignment: 0.5,
+      );
+    }
+  }
+
+
 
   /// Fetch more movies for current genre (pagination)
   Future<void> fetchMoreMovies() async {

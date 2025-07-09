@@ -94,6 +94,7 @@ class DataEntity {
     return map;
   }
 
+
 }
 
 class MoviesEntity {

@@ -8,31 +8,46 @@ import 'home_states.dart';
 class HomeViewModel extends HydratedCubit<HomeStates> {
   final HomeUseCase homeUseCase;
 
-  HomeViewModel({required this.homeUseCase}) : super(MostPopularLoadingState());
+  // Cache for genre-based movie lists
+  Map<String, MoviesResponseEntity> _genreCache = {};
+
+  HomeViewModel({required this.homeUseCase})
+      : super(MostPopularLoadingState());
 
   void getMostPopularMovies({String? genre}) async {
+    final key = genre ?? 'general';
+
+    // Load from memory if available
+    if (_genreCache.containsKey(key)) {
+      emit(MostPopularSuccessState(moviesResponseEntity: _genreCache[key]!));
+      return;
+    }
+
     emit(MostPopularLoadingState());
 
     final result = await homeUseCase.invoke(genre);
 
     result.fold(
-          (failure) => emit(MostPopularErrorState(message: failure.errorMessage)),
-          (response) => emit(MostPopularSuccessState(moviesResponseEntity: response)),
+          (failure) =>
+          emit(MostPopularErrorState(message: failure.errorMessage)),
+          (response) {
+        _genreCache[key] = response;
+        emit(MostPopularSuccessState(moviesResponseEntity: response));
+      },
     );
   }
 
   @override
   HomeStates? fromJson(Map<String, dynamic> json) {
     try {
-      if (json['state'] == 'success') {
-        return MostPopularSuccessState(
-          moviesResponseEntity: MoviesResponseEntity.fromJson(json['data']),
-        );
-      } else if (json['state'] == 'error') {
-        return MostPopularErrorState(message: json['message']);
-      } else {
-        return MostPopularLoadingState();
-      }
+      _genreCache = (json['genres'] as Map<String, dynamic>).map(
+            (key, value) =>
+            MapEntry(key, MoviesResponseEntity.fromJson(value)),
+      );
+      return MostPopularSuccessState(
+        moviesResponseEntity: _genreCache['general'] ??
+            MoviesResponseEntity(data: DataEntity(movies: [])),
+      );
     } catch (e) {
       return null;
     }
@@ -40,21 +55,10 @@ class HomeViewModel extends HydratedCubit<HomeStates> {
 
   @override
   Map<String, dynamic>? toJson(HomeStates state) {
-    if (state is MostPopularSuccessState) {
-      return {
-        'state': 'success',
-        'data': state.moviesResponseEntity.toJson(),
-      };
-    } else if (state is MostPopularErrorState) {
-      return {
-        'state': 'error',
-        'message': state.message,
-      };
-    } else if (state is MostPopularLoadingState) {
-      return {
-        'state': 'loading',
-      };
-    }
-    return null;
+    return {
+      'genres': _genreCache.map(
+            (key, value) => MapEntry(key, value.toJson()),
+      ),
+    };
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:movies/core/utils/custom_image.dart';
 import 'package:movies/presentation/movie%20details/Domain/Entity/movie_details_response_entity.dart';
 
 class ScreenshotsSection extends StatelessWidget {
@@ -18,26 +19,38 @@ class ScreenshotsSection extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: List.generate(
-        3,
-        (index) {
-          final imageUrl = screenshots[index] ?? '';
-          return Padding(
-            padding: EdgeInsets.only(bottom:  8.h),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(12.r),
-              child: Image.network(
-                imageUrl,
-                height: 167.h,
-                width: double.infinity,
-                fit: BoxFit.cover,
-                errorBuilder: (context, error, stackTrace) =>
-                    Container(color: Colors.grey, width: 280.w, height: 180.h),
+      children:  List.generate(
+      screenshots.length,
+          (index) {
+        final imageUrl = screenshots[index];
+        final isValidUrl = imageUrl != null &&
+            imageUrl.startsWith('http') &&
+            Uri.tryParse(imageUrl)?.hasAbsolutePath == true;
+
+        return Padding(
+          padding: EdgeInsets.only(bottom: 8.h),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(12.r),
+            child: isValidUrl
+                ? CustomImage(
+              imageUrl,
+              width: double.infinity,
+              height: 200.h,
+              fit: BoxFit.cover,
+              radius: 0,
+            )
+                : Container(
+              width: double.infinity,
+              height: 167.h,
+              color: Colors.grey,
+              child: Center(
+                child: Icon(Icons.broken_image, color: Colors.white),
               ),
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
+    ),
     );
   }
 }
