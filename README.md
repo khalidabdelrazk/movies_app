@@ -45,16 +45,16 @@ A beautifully designed Flutter application for browsing and exploring the **late
 
 Each image is fully responsive on **mobile and desktop**:
 
-### 🖼️ Mockup 1
+### 🖼️ Authentication
 ![movies mookup1](https://github.com/khalidabdelrazk/photos/blob/main/movies%20mookup1.png?raw=true)
 
-### 🖼️ Mockup 2
+### 🖼️ Root
 ![movies mookup2](https://github.com/khalidabdelrazk/photos/blob/main/movies%20mookup2.png?raw=true)
 
-### 🖼️ Mockup 3
+### 🖼️ Profile
 ![movies mookup3](https://github.com/khalidabdelrazk/photos/blob/main/movies%20mookup3.png?raw=true)
 
-### 🖼️ Mockup 4
+### 🖼️ Movie Details
 ![movies mookup4](https://github.com/khalidabdelrazk/photos/blob/main/movies%20mookup4.png?raw=true)
 
 ---
