@@ -54,7 +54,7 @@ class LoginState extends State<Login> {
         }
       },
       child: Scaffold(
-        backgroundColor: AppColors.darkGray, // Set background color to black
+        backgroundColor: AppColors.black, // Set background color to black
         body: SingleChildScrollView(
           // To prevent overflow on small screens when keyboard appears
           padding: EdgeInsets.symmetric(horizontal: 19.sp),

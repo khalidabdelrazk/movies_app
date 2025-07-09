@@ -69,7 +69,7 @@ class _RegisterState extends State<Register> {
           ),
           centerTitle: true,
         ),
-        backgroundColor: AppColors.darkGray,
+        backgroundColor: AppColors.black,
         body: Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.sp),
           child: SingleChildScrollView(
