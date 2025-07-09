@@ -43,8 +43,6 @@ A beautifully designed Flutter application for browsing and exploring the **late
 
 ## 📱 UI Previews
 
-Each image is fully responsive on **mobile and desktop**:
-
 ### 🖼️ Authentication
 ![movies mookup1](https://github.com/khalidabdelrazk/photos/blob/main/movies%20mookup1.png?raw=true)
 
