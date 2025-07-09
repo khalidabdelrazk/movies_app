@@ -17,7 +17,7 @@ class ResetPassword extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.black,
+      backgroundColor: AppColors.darkGray,
       appBar: AppBar(
         backgroundColor: AppColors.black,
         title: Text(
