@@ -9,9 +9,7 @@ class AuthViewModel extends Cubit<AuthStates> {
   AuthUseCase authUseCase;
   AuthViewModel({required this.authUseCase}) : super(InitState());
   //
-  final emailController = TextEditingController(
-    text: 'amr212432@gmail.com',
-  );
+  final emailController = TextEditingController();
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
   final passwordController = TextEditingController();
